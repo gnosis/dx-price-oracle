@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 contract DutchX {
-
+    // TODO
 }
 
 contract DutchXPriceOracle {
@@ -14,6 +14,8 @@ contract DutchXPriceOracle {
     modifier onlyWhitelisted(address token) {        
         // Require token to be whitelisted in DutchX
         require(isWhitelisted(token), "not whitelisted");
+
+        _;
     }
     
     DutchX dutchX;
@@ -29,10 +31,10 @@ contract DutchXPriceOracle {
     function getPriceOfWhitelistedToken(address token)
         public
         view
-        isWhitelisted(token);
+        isWhitelisted(token)
         returns (uint num, uint den)
     {
-        (num, den) = getPrice(token):
+        (num, den) = getPrice(token);
     }
 
     function getPrice(address token)
@@ -56,7 +58,7 @@ contract DutchXPriceOracle {
             // Loop should begin by calling auction index lAI - numberOfAuctions
             // and end by calling lAI - 1
             // That gives numberOfAuctions calls
-            (_num, _den) = getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
+            (uint _num, uint _den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
 
             // Prices are now sorted in chronological order
             prices.push(fraction(_num, _den));
