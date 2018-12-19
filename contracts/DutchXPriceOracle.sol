@@ -2,6 +2,26 @@ pragma solidity ^0.5.0;
 
 contract DutchX {
     // TODO
+
+    mapping (address => mapping (address => uint)) public auctionStarts;
+
+    function getAuctionIndex(
+        address token1,
+        address token2
+    )
+        public
+        view
+        returns (uint auctionIndex);
+
+    function getPriceInPastAuction(
+        address token1,
+        address token2,
+        uint auctionIndex
+    )
+        public
+        view
+        // price < 10^31
+        returns (uint num, uint den);
 }
 
 contract DutchXPriceOracle {
