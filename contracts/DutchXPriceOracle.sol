@@ -4,6 +4,7 @@ contract DutchX {
     // TODO
 
     mapping (address => mapping (address => uint)) public auctionStarts;
+    mapping (address => bool) public approvedTokens;
 
     function getAuctionIndex(
         address token1,
@@ -26,11 +27,7 @@ contract DutchX {
 
 contract DutchXPriceOracle {
 
-    struct fraction {
-        uint num;
-        uint den;
-    }
-    
+   
     DutchX dutchX;
     address ethToken;
     
