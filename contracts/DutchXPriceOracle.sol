@@ -74,14 +74,14 @@ contract DutchXPriceOracle {
 
         fraction[] memory prices = new fraction[](numberOfAuctions);
 
-        for (uint i = numberOfAuctions - 1; i >= 0; i--) {
-            // Loop should begin by calling auction index lAI - numberOfAuctions
-            // and end by calling lAI - 1
+        for (uint i = 0; i < numberOfAuctions; i--) {
+            // Loop should begin by calling auction index lAI - 1
+            // and end by calling lAI - numberOfAcutions
             // That gives numberOfAuctions calls
             (uint _num, uint _den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
 
-            // Prices are now sorted in chronological order
-            prices.push(fraction(_num, _den));
+            // Prices are now sorted in reverse chronological order
+            prices[i] = fraction(_num, _den);
         }
 
         (num, den) = getMedian(prices);
