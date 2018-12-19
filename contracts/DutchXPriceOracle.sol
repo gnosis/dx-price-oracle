@@ -72,7 +72,8 @@ contract DutchXPriceOracle {
         require(numberOfAuctions >= 1, "cannot be 0");
         require(latestAuctionIndex >= numberOfAuctions + 1, "not enough auctions");
 
-        fraction[] memory prices = new fraction[](numberOfAuctions);
+        uint[] memory nums = new uint[](numberOfAuctions);
+        uint[] memory dens = new uint[](numberOfAuctions);
 
         for (uint i = 0; i < numberOfAuctions; i--) {
             // Loop should begin by calling auction index lAI - 1
@@ -81,13 +82,14 @@ contract DutchXPriceOracle {
             (uint _num, uint _den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
 
             // Prices are now sorted in reverse chronological order
-            prices[i] = fraction(_num, _den);
+            nums[i] = _num;
+            dens[i] = _den;
         }
 
-        (num, den) = getMedian(prices);
+        (num, den) = getMedian(nums, dens);
     }
 
-    function getMedian(fraction[] memory prices)
+    function getMedian(uint[] memory nums, uint[] memory dens)
         public
         pure
         returns (uint num, uint den)
