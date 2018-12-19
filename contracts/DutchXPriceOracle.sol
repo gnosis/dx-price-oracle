@@ -10,13 +10,6 @@ contract DutchXPriceOracle {
         uint num;
         uint den;
     }
-
-    modifier onlyWhitelisted(address token) {        
-        // Require token to be whitelisted in DutchX
-        require(isWhitelisted(token), "not whitelisted");
-
-        _;
-    }
     
     DutchX dutchX;
     address ethToken;
@@ -28,29 +21,36 @@ contract DutchXPriceOracle {
         ethToken = _ethToken;
     }
 
-    function getPriceOfWhitelistedToken(address token)
-        public
-        view
-        isWhitelisted(token)
-        returns (uint num, uint den)
-    {
-        (num, den) = getPrice(token);
-    }
-
     function getPrice(address token)
         public
         view
         returns (uint num, uint den)
     {
+        if (!isWhitelisted(token)) {
+            return (0, 0);
+        }
+
+        uint auctionStart = dutchX.auctionStarts(token, ethToken);
+
+        // naive inactivity logic
+        // 86400 = 24 hours
+        if (auctionStart < now - 86400 && auctionStart > 1) {
+            return (0, 0);
+        }
+
         (num, den) = getPriceFromLastNAuctions(token, 9);
     }
-
+    
     function getPriceFromLastNAuctions(address token, uint numberOfAuctions)
         public
         view
         returns (uint num, uint den)
     {
         uint latestAuctionIndex = dutchX.getAuctionIndex(token, ethToken);
+
+        // TODO: optional requires:
+        require(numberOfAuctions >= 1, "cannot be 0");
+        require(latestAuctionIndex >= numberOfAuctions + 1, "not enough auctions");
 
         fraction[] memory prices = new fraction[](numberOfAuctions);
 
