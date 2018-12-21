@@ -3,7 +3,6 @@ pragma solidity ^0.5.0;
 contract DutchX {
     // TODO
 
-    mapping (address => mapping (address => uint)) public auctionStarts;
     mapping (address => bool) public approvedTokens;
 
     function getAuctionIndex(
@@ -13,6 +12,15 @@ contract DutchX {
         public
         view
         returns (uint auctionIndex);
+
+    function getAuctionStart(
+        address token1,
+        address token2,
+        uint auctionIndex
+    )
+        public
+        view
+        returns (uint auctionStart);
 
     function getPriceInPastAuction(
         address token1,
@@ -27,7 +35,6 @@ contract DutchX {
 
 contract DutchXPriceOracle {
 
-   
     DutchX dutchX;
     address ethToken;
     
@@ -43,65 +50,92 @@ contract DutchXPriceOracle {
         view
         returns (uint num, uint den)
     {
-        if (!isWhitelisted(token)) {
-            return (0, 0);
-        }
-
-        uint auctionStart = dutchX.auctionStarts(token, ethToken);
-
-        // naive inactivity logic
-        // 86400 = 24 hours
-        if (auctionStart < now - 86400 && auctionStart > 1) {
-            return (0, 0);
-        }
-
-        (num, den) = getPriceFromLastNAuctions(token, 9);
+        (num, den) = getPriceCustom(token, true, 4.5 days, 9);
     }
     
-    function getPriceFromLastNAuctions(address token, uint numberOfAuctions)
+    function getPriceCustom(
+        address token,
+        bool requireWhitelisted,
+        uint maximumTimePeriod,
+        uint numberOfAuctions
+    )
         public
         view
         returns (uint num, uint den)
     {
+        // Whitelist check
+        if (requireWhitelisted && !isWhitelisted(token)) {
+            return (0, 0);
+        }
+
+        // Activity check
         uint latestAuctionIndex = dutchX.getAuctionIndex(token, ethToken);
+        if (dutchX.getAuctionStart(token, ethToken, latestAuctionIndex - numberOfAuctions) < now - maximumTimePeriod) {
+            return (0, 0);
+        }
 
-        // TODO: optional requires:
-        require(numberOfAuctions >= 1, "cannot be 0");
-        require(latestAuctionIndex >= numberOfAuctions + 1, "not enough auctions");
+        (num, den) = getPricesAndMedian(token, numberOfAuctions, latestAuctionIndex);
+    }
 
+    function getPricesAndMedian(
+        address token,
+        uint numberOfAuctions,
+        uint latestAuctionIndex
+    )
+        public
+        view
+        returns (uint num, uint den)
+    {
         uint[] memory nums = new uint[](numberOfAuctions);
         uint[] memory dens = new uint[](numberOfAuctions);
+        uint[] memory linkedListOfIndices = new uint[](numberOfAuctions);
+        uint indexOfSmallest;
 
-        for (uint i = 0; i < numberOfAuctions; i--) {
-            // Loop should begin by calling auction index lAI - 1
-            // and end by calling lAI - numberOfAcutions
+        for (uint i = 0; i < numberOfAuctions; i++) {
+            // Loop begins by calling auction index lAI - 1 and ends by calling lAI - numberOfAcutions
             // That gives numberOfAuctions calls
             (uint _num, uint _den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
 
-            // Prices are now sorted in reverse chronological order
-            nums[i] = _num;
-            dens[i] = _den;
-        }
+            (nums[i], dens[i]) = (_num, _den);
 
-        (num, den) = getMedian(nums, dens);
+            // We begin by comparing latest price to smallest price
+            // Smallest price is given by prices[linkedListOfIndices.indexOfLargest]
+            uint previousIndex;
+            uint index = indexOfSmallest;
+
+            for (uint j = 0; j < i; j++) {
+                if (isSmaller(_num, _den, nums[index], dens[index])) {
+                    // Update current term to point to new term
+                    // Current term is given by 
+                    linkedListOfIndices[previousIndex] = i;
+
+                    // Update new term to point to next term
+                    linkedListOfIndices[i] = index;
+                    
+                    if (j == 0) {
+                        indexOfSmallest = i;
+                    }
+
+                    break;
+                }
+
+                if (j == i - 1) {
+                    // Loop is at last iteration
+                    linkedListOfIndices[index] = i;
+                    linkedListOfIndices[i] = indexOfSmallest;
+                } else {
+                    previousIndex = index;
+                    index = linkedListOfIndices[index];
+                }
+            }
+        }   
     }
 
-    function getMedian(uint[] memory nums, uint[] memory dens)
-        public
-        pure
-        returns (uint num, uint den)
-    {
-        // TODO
-        // Will use algorithm described in https://stackoverflow.com/a/28822243
-    }
-
-    function isSmallerFraction(uint num1, uint den1, uint num2, uint den2)
+    function isSmaller(uint num1, uint den1, uint num2, uint den2)
         public
         pure
         returns (bool)
     {
-        // Possibly use floating point numbers?
-
         return (num1 * den2 < num2 * den1);
     }
 
