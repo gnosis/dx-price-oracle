@@ -84,7 +84,7 @@ contract DutchXPriceOracle {
     )
         public
         view
-        returns (uint, den)
+        returns (uint, uint)
     {
         uint[] memory nums = new uint[](numberOfAuctions);
         uint[] memory dens = new uint[](numberOfAuctions);
@@ -132,7 +132,7 @@ contract DutchXPriceOracle {
 
         uint index = indexOfSmallest;
 
-        for (uint i = 0; i < (numberOfAuctions - 1) / 2) {
+        for (uint i = 0; i < (numberOfAuctions - 1) / 2; i++) {
             index = linkedListOfIndices[index];
         }
 
