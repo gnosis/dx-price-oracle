@@ -84,7 +84,7 @@ contract DutchXPriceOracle {
     )
         public
         view
-        returns (uint num, uint den)
+        returns (uint, den)
     {
         uint[] memory nums = new uint[](numberOfAuctions);
         uint[] memory dens = new uint[](numberOfAuctions);
@@ -94,9 +94,9 @@ contract DutchXPriceOracle {
         for (uint i = 0; i < numberOfAuctions; i++) {
             // Loop begins by calling auction index lAI - 1 and ends by calling lAI - numberOfAcutions
             // That gives numberOfAuctions calls
-            (uint _num, uint _den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
+            (uint num, uint den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
 
-            (nums[i], dens[i]) = (_num, _den);
+            (nums[i], dens[i]) = (num, den);
 
             // We begin by comparing latest price to smallest price
             // Smallest price is given by prices[linkedListOfIndices.indexOfLargest]
@@ -104,7 +104,7 @@ contract DutchXPriceOracle {
             uint index = indexOfSmallest;
 
             for (uint j = 0; j < i; j++) {
-                if (isSmaller(_num, _den, nums[index], dens[index])) {
+                if (isSmaller(num, den, nums[index], dens[index])) {
                     // Update current term to point to new term
                     // Current term is given by 
                     linkedListOfIndices[previousIndex] = i;
@@ -128,7 +128,27 @@ contract DutchXPriceOracle {
                     index = linkedListOfIndices[index];
                 }
             }
-        }   
+        }
+
+        uint index = indexOfSmallest;
+
+        for (uint i = 0; i < (numberOfAuctions - 1) / 2) {
+            index = linkedListOfIndices[index];
+        }
+
+        if (numberOfAuctions % 2 == 1) {
+            // odd number of auctions
+            return (nums[index], dens[index]);
+        } else {
+            // get next element
+            uint nextIndex = linkedListOfIndices[index];
+        
+            // return average
+            uint num = nums[index] * dens[nextIndex] + nums[nextIndex] * dens[index];
+            uint den = 2 * dens[index] * dens[nextIndex];
+
+            return (num, den);
+        }
     }
 
     function isSmaller(uint num1, uint den1, uint num2, uint den2)
