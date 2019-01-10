@@ -111,7 +111,7 @@ contract DutchXPriceOracle {
         uint indexOfSmallest;
 
         for (uint i = 0; i < numberOfAuctions; i++) {
-            // Loop begins by calling auction index lAI - 1 and ends by calling lAI - numberOfAcutions
+            // Loop begins by calling auctionIndex - 1 and ends by calling auctionIndex - numberOfAcutions
             // That gives numberOfAuctions calls
             (uint num, uint den) = dutchX.getPriceInPastAuction(token, ethToken, auctionIndex - 1 - i);
 
@@ -120,19 +120,20 @@ contract DutchXPriceOracle {
             // We begin by comparing latest price to smallest price
             // Smallest price is given by prices[linkedListOfIndices.indexOfLargest]
             uint previousIndex;
-            uint index = indexOfSmallest;
+            uint index = linkedListOfIndices[indexOfSmallest];
 
             for (uint j = 0; j < i; j++) {
                 if (isSmaller(num, den, nums[index], dens[index])) {
-                    // Update current term to point to new term
-                    // Current term is given by 
-                    linkedListOfIndices[previousIndex] = i;
 
                     // Update new term to point to next term
                     linkedListOfIndices[i] = index;
-                    
+
                     if (j == 0) {
-                        indexOfSmallest = i;
+                        linkedListOfIndices[indexOfSmallest] = i;
+                    } else {
+                        // Update current term to point to new term
+                        // Current term is given by 
+                        linkedListOfIndices[previousIndex] = i;
                     }
 
                     break;
@@ -140,8 +141,9 @@ contract DutchXPriceOracle {
 
                 if (j == i - 1) {
                     // Loop is at last iteration
+                    linkedListOfIndices[i] = linkedListOfIndices[indexOfSmallest];
                     linkedListOfIndices[index] = i;
-                    linkedListOfIndices[i] = indexOfSmallest;
+                    indexOfSmallest = i;
                 } else {
                     previousIndex = index;
                     index = linkedListOfIndices[index];
@@ -151,7 +153,7 @@ contract DutchXPriceOracle {
 
         uint index = indexOfSmallest;
 
-        for (uint i = 0; i < (numberOfAuctions - 1) / 2; i++) {
+        for (uint i = 0; i < (numberOfAuctions + 1) / 2; i++) {
             index = linkedListOfIndices[index];
         }
 

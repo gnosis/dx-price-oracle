@@ -1,6 +1,6 @@
 const abi = require('ethereumjs-abi')
 
-const { generateDutchX, addToMock } = require('./constants')
+const { numberOfAuctions, rand, generateDutchX, addToMock } = require('./constants')
 
 const DutchXPriceOracle = artifacts.require('DutchXPriceOracle')
 const DutchX = artifacts.require('DutchExchange')
@@ -34,7 +34,13 @@ contract('DutchXPriceOracle', async (accounts) => {
 	})
 
 	it('getPricesAndMedian() correct', async () => {
-		// await 
+		for (let i = 2; i < numberOfAuctions + 1; i += 6) {
+			const numberOfTimes = Math.ceil((numberOfAuctions - i) / 10)
+			for (let j = 0; j < numberOfTimes; j++) {
+				const auctionIndex = rand(i + 1, numberOfAuctions)
+				await testGetPricesAndMedian(i, auctionIndex)
+			}
+		}
 	})
 
 	it('isWhitelisted() correct', async () => {
@@ -53,10 +59,29 @@ contract('DutchXPriceOracle', async (accounts) => {
 	it('computeAuctionIndex() correct', async () => {
 		const latestAuctionIndex = (await dutchX.getAuctionIndex(tokenA, ethToken)).toNumber()
 
-		for (let i = 0; i < 50; i += 3) {			
+		for (let i = 0; i < numberOfAuctions; i +=3) {			
 			await testComputeAuctionIndex(i, latestAuctionIndex)
 		}		
 	})
+
+	async function testGetPricesAndMedian(numberOfAuctions, auctionIndex) {
+		
+		const price = (await priceOracle.getPricesAndMedian(tokenA, numberOfAuctions, auctionIndex))
+		const medianSol = price['0'].toNumber() / price['1'].toNumber()
+
+		const pricesJS = []
+
+		for (let i = 0; i < numberOfAuctions; i++) {
+			const priceJS = await dutchX.getPriceInPastAuction(tokenA, ethToken, auctionIndex - 1 - i)
+			pricesJS.push(priceJS['0'].toNumber() / priceJS['1'].toNumber())
+		}
+
+		pricesJS.sort((a, b) => a - b)
+
+		const medianJS = pricesJS[Math.floor((pricesJS.length - 1) / 2)]
+
+		assert.equal(medianSol, medianJS, 'getPricesAndMedian() not correct')
+	}
 
 	async function testIsWhitelisted(address, shouldBeWhitelisted) {
 

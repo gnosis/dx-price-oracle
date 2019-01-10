@@ -9,8 +9,9 @@ const getPriceInPastAuction = 'getPriceInPastAuction(address,address,uint256):(u
 const getClearingTime = 'getClearingTime(address,address,uint256):(uint256)'
 const getAuctionIndex = 'getAuctionIndex(address,address):(uint256)'
 
+const numberOfAuctions = 50
+
 async function generateDutchX(mock, tokenA, tokenB) {
-    const numberOfAuctions = 50
 
     // last closed auction has index numberOfAuctions - 1
     // hence latestAuctionIndex will be numberOfAuctions
@@ -18,6 +19,11 @@ async function generateDutchX(mock, tokenA, tokenB) {
 
     const auctions = generateAuctions(
         numberOfAuctions, [], date112019, 100, 200, 10, 20, 10000, 50000)
+    
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    console.log('auctions',auctions)
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    
     
     await generateMock(auctions, 0, mock, tokenA, tokenB)
 }
@@ -107,6 +113,8 @@ function rand(min, max) {
 }
 
 module.exports = {
+    numberOfAuctions,
+    rand,
     generateDutchX,
     addToMock,
 }
