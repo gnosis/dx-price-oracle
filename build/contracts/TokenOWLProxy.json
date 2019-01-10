@@ -1,0 +1,1422 @@
+{
+  "contractName": "TokenOWLProxy",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "creator",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "minter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "masterCopy",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "proxied",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060405160208061075d833981016040525180600160a060020a038116151561009a57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601b60248201527f546865206d617374657220636f70792069732072657175697265640000000000604482015290519081900360640190fd5b60008054600160a060020a03909216600160a060020a031992831617905560068054909116331790555061068a806100d36000396000f3006080604052600436106100b95763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166302d05d3f81146100eb57806306fdde031461011c57806307546172146101a6578063095ea7b3146101bb57806318160ddd146101f357806323b872dd1461021a578063313ce5671461024457806370a082311461026f57806395d89b4114610290578063a619486e146102a5578063a9059cbb146102ba578063dd62ed3e146102de575b60008054600160a060020a03169036908037600080368184600019f43d6000803e8080156100e6573d6000f35b3d6000fd5b3480156100f757600080fd5b50610100610305565b60408051600160a060020a039092168252519081900360200190f35b34801561012857600080fd5b50610131610314565b6040805160208082528351818301528351919283929083019185019080838360005b8381101561016b578181015183820152602001610153565b50505050905090810190601f1680156101985780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3480156101b257600080fd5b5061010061034b565b3480156101c757600080fd5b506101df600160a060020a036004351660243561035a565b604080519115158252519081900360200190f35b3480156101ff57600080fd5b506102086103c1565b60408051918252519081900360200190f35b34801561022657600080fd5b506101df600160a060020a03600435811690602435166044356103c7565b34801561025057600080fd5b506102596104f4565b6040805160ff9092168252519081900360200190f35b34801561027b57600080fd5b50610208600160a060020a03600435166104f9565b34801561029c57600080fd5b50610131610514565b3480156102b157600080fd5b5061010061054b565b3480156102c657600080fd5b506101df600160a060020a036004351660243561055a565b3480156102ea57600080fd5b50610208600160a060020a0360043581169060243516610627565b600654600160a060020a031681565b60408051808201909152600981527f4f574c20546f6b656e0000000000000000000000000000000000000000000000602082015281565b600754600160a060020a031681565b336000818152600260209081526040808320600160a060020a038716808552908352818420869055815186815291519394909390927f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925928290030190a35060015b92915050565b60035490565b600160a060020a0383166000908152600160205260408120546103f0908363ffffffff61065216565b158061042d5750600160a060020a038416600090815260026020908152604080832033845290915290205461042b908363ffffffff61065216565b155b8061045e5750600160a060020a03831660009081526001602052604090205461045c908363ffffffff61065716565b155b1561046b575060006104ed565b600160a060020a0380851660008181526001602081815260408084208054899003905560028252808420338552825280842080548990039055948816808452918152918490208054870190558351868152935190937fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef92908290030190a35060015b9392505050565b601281565b600160a060020a031660009081526001602052604090205490565b60408051808201909152600381527f4f574c0000000000000000000000000000000000000000000000000000000000602082015281565b600054600160a060020a031681565b3360009081526001602052604081205461057a908363ffffffff61065216565b15806105ac5750600160a060020a0383166000908152600160205260409020546105aa908363ffffffff61065716565b155b156105b9575060006103bb565b33600081815260016020908152604080832080548790039055600160a060020a03871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a350600192915050565b600160a060020a03918216600090815260026020908152604080832093909416825291909152205490565b111590565b81011015905600a165627a7a723058208a72c7a53619790cdbeda2f3d78fa456b49448a3346524d4c18f5446cad730200029",
+  "deployedBytecode": "0x6080604052600436106100b95763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166302d05d3f81146100eb57806306fdde031461011c57806307546172146101a6578063095ea7b3146101bb57806318160ddd146101f357806323b872dd1461021a578063313ce5671461024457806370a082311461026f57806395d89b4114610290578063a619486e146102a5578063a9059cbb146102ba578063dd62ed3e146102de575b60008054600160a060020a03169036908037600080368184600019f43d6000803e8080156100e6573d6000f35b3d6000fd5b3480156100f757600080fd5b50610100610305565b60408051600160a060020a039092168252519081900360200190f35b34801561012857600080fd5b50610131610314565b6040805160208082528351818301528351919283929083019185019080838360005b8381101561016b578181015183820152602001610153565b50505050905090810190601f1680156101985780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3480156101b257600080fd5b5061010061034b565b3480156101c757600080fd5b506101df600160a060020a036004351660243561035a565b604080519115158252519081900360200190f35b3480156101ff57600080fd5b506102086103c1565b60408051918252519081900360200190f35b34801561022657600080fd5b506101df600160a060020a03600435811690602435166044356103c7565b34801561025057600080fd5b506102596104f4565b6040805160ff9092168252519081900360200190f35b34801561027b57600080fd5b50610208600160a060020a03600435166104f9565b34801561029c57600080fd5b50610131610514565b3480156102b157600080fd5b5061010061054b565b3480156102c657600080fd5b506101df600160a060020a036004351660243561055a565b3480156102ea57600080fd5b50610208600160a060020a0360043581169060243516610627565b600654600160a060020a031681565b60408051808201909152600981527f4f574c20546f6b656e0000000000000000000000000000000000000000000000602082015281565b600754600160a060020a031681565b336000818152600260209081526040808320600160a060020a038716808552908352818420869055815186815291519394909390927f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925928290030190a35060015b92915050565b60035490565b600160a060020a0383166000908152600160205260408120546103f0908363ffffffff61065216565b158061042d5750600160a060020a038416600090815260026020908152604080832033845290915290205461042b908363ffffffff61065216565b155b8061045e5750600160a060020a03831660009081526001602052604090205461045c908363ffffffff61065716565b155b1561046b575060006104ed565b600160a060020a0380851660008181526001602081815260408084208054899003905560028252808420338552825280842080548990039055948816808452918152918490208054870190558351868152935190937fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef92908290030190a35060015b9392505050565b601281565b600160a060020a031660009081526001602052604090205490565b60408051808201909152600381527f4f574c0000000000000000000000000000000000000000000000000000000000602082015281565b600054600160a060020a031681565b3360009081526001602052604081205461057a908363ffffffff61065216565b15806105ac5750600160a060020a0383166000908152600160205260409020546105aa908363ffffffff61065716565b155b156105b9575060006103bb565b33600081815260016020908152604080832080548790039055600160a060020a03871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a350600192915050565b600160a060020a03918216600090815260026020908152604080832093909416825291909152205490565b111590565b81011015905600a165627a7a723058208a72c7a53619790cdbeda2f3d78fa456b49448a3346524d4c18f5446cad730200029",
+  "sourceMap": "153:606:21:-;;;648:109;8:9:-1;5:2;;;30:1;27;20:12;5:2;648:109:21;;;;;;;;;;;;;;-1:-1:-1;;;;;616:16:25;;;;608:56;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;674:10;:24;;-1:-1:-1;;;;;674:24:25;;;-1:-1:-1;;;;;;674:24:25;;;;;;730:7:21;:20;;;;;740:10;730:20;;;-1:-1:-1;153:606:21;;;;;;",
+  "deployedSourceMap": "153:606:21:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;865:19:25;887:10;;-1:-1:-1;;;;;887:10:25;;949:14;;865:19;930:34;1048:1;;1029:14;1048:1;1013:11;-1:-1:-1;;992:58:25;1084:16;1081:1;1078;1063:38;1121:7;1141:38;;;;1212:16;1209:1;1202:27;1141:38;1160:16;1157:1;1150:27;521:22:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;521:22:21;;;;;;;;-1:-1:-1;;;;;521:22:21;;;;;;;;;;;;;;235:41;;8:9:-1;5:2;;;30:1;27;20:12;5:2;235:41:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:100:-1;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;235:41:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;549:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;549:21:21;;;;2152:216:23;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;2152:216:23;-1:-1:-1;;;;;2152:216:23;;;;;;;;;;;;;;;;;;;;;;;;;3085:113;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3085:113:23;;;;;;;;;;;;;;;;;;;;1463:472;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;1463:472:23;-1:-1:-1;;;;;1463:472:23;;;;;;;;;;;;325:35:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;325:35:21;;;;;;;;;;;;;;;;;;;;;;;2878:128:23;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;2878:128:23;-1:-1:-1;;;;;2878:128:23;;;;;282:37:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;282:37:21;;;;198:25:25;;8:9:-1;5:2;;;30:1;27;20:12;5:2;198:25:25;;;;786:365:23;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;786:365:23;-1:-1:-1;;;;;786:365:23;;;;;;;2578:156;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;2578:156:23;-1:-1:-1;;;;;2578:156:23;;;;;;;;;;521:22:21;;;-1:-1:-1;;;;;521:22:21;;:::o;235:41::-;;;;;;;;;;;;;;;;;;;:::o;549:21::-;;;-1:-1:-1;;;;;549:21:21;;:::o;2152:216:23:-;2261:10;2230:4;2250:22;;;:10;:22;;;;;;;;-1:-1:-1;;;;;2250:31:23;;;;;;;;;;;:39;;;2304:36;;;;;;;2230:4;;2250:31;;2261:10;;2304:36;;;;;;;;-1:-1:-1;2357:4:23;2152:216;;;;;:::o;3085:113::-;3180:11;;3085:113;:::o;1463:472::-;-1:-1:-1;;;;;1580:14:23;;1555:4;1580:14;;;:8;:14;;;;;;:31;;1605:5;1580:31;:24;:31;:::i;:::-;1579:32;:94;;;-1:-1:-1;;;;;;1628:16:23;;;;;;:10;:16;;;;;;;;1645:10;1628:28;;;;;;;;:45;;1667:5;1628:45;:38;:45;:::i;:::-;1627:46;1579:94;:140;;;-1:-1:-1;;;;;;1690:12:23;;;;;;:8;:12;;;;;;:29;;1713:5;1690:29;:22;:29;:::i;:::-;1689:30;1579:140;1575:182;;;-1:-1:-1;1741:5:23;1734:12;;1575:182;-1:-1:-1;;;;;1766:14:23;;;;;;;:8;:14;;;;;;;;:23;;;;;;;1799:10;:16;;;;;1816:10;1799:28;;;;;;;:37;;;;;;;1846:12;;;;;;;;;;;;;:21;;;;;;1882:25;;;;;;;1846:12;;1882:25;;;;;;;;;-1:-1:-1;1924:4:23;1463:472;;;;;;:::o;325:35:21:-;358:2;325:35;:::o;2878:128:23:-;-1:-1:-1;;;;;2984:15:23;2957:4;2984:15;;;:8;:15;;;;;;;2878:128::o;282:37:21:-;;;;;;;;;;;;;;;;;;;:::o;198:25:25:-;;;-1:-1:-1;;;;;198:25:25;;:::o;786:365:23:-;894:10;860:4;885:20;;;:8;:20;;;;;;:37;;916:5;885:37;:30;:37;:::i;:::-;884:38;:84;;;-1:-1:-1;;;;;;939:12:23;;;;;;:8;:12;;;;;;:29;;962:5;939:29;:22;:29;:::i;:::-;938:30;884:84;880:127;;;-1:-1:-1;991:5:23;984:12;;880:127;1026:10;1017:20;;;;:8;:20;;;;;;;;:29;;;;;;;-1:-1:-1;;;;;1056:12:23;;;;;;;;;:21;;;;;;1092:31;;;;;;;1056:12;;1026:10;1092:31;;;;;;;;;;;-1:-1:-1;1140:4:23;786:365;;;;:::o;2578:156::-;-1:-1:-1;;;;;2701:17:23;;;2674:4;2701:17;;;:10;:17;;;;;;;;:26;;;;;;;;;;;;;2578:156::o;6842:122:24:-;-1:-1:-1;6951:6:24;;6842:122::o;6544:126::-;6653:5;;-1:-1:-1;6653:10:24;;6544:126::o",
+  "source": "pragma solidity ^0.4.24;\n\nimport \"@gnosis.pm/util-contracts/contracts/GnosisStandardToken.sol\";\nimport \"@gnosis.pm/util-contracts/contracts/Proxy.sol\";\n\ncontract TokenOWLProxy is Proxy, GnosisStandardToken {\n    using Math for *;\n\n    string public constant name = \"OWL Token\";\n    string public constant symbol = \"OWL\";\n    uint8 public constant decimals = 18;\n\n    struct masterCopyCountdownType {\n        address masterCopy;\n        uint timeWhenAvailable;\n    }\n\n    masterCopyCountdownType masterCopyCountdown;\n\n    address public creator;\n    address public minter;\n\n    /// @dev Constructor of the contract OWL, which distributes tokens\n    constructor (address proxied)\n        Proxy(proxied)\n        public\n    {\n        creator = msg.sender;\n    }\n}",
+  "sourcePath": "@gnosis.pm/owl-token/contracts/TokenOWLProxy.sol",
+  "ast": {
+    "absolutePath": "@gnosis.pm/owl-token/contracts/TokenOWLProxy.sol",
+    "exportedSymbols": {
+      "TokenOWLProxy": [
+        7027
+      ]
+    },
+    "id": 7028,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6984,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:21"
+      },
+      {
+        "absolutePath": "@gnosis.pm/util-contracts/contracts/GnosisStandardToken.sol",
+        "file": "@gnosis.pm/util-contracts/contracts/GnosisStandardToken.sol",
+        "id": 6985,
+        "nodeType": "ImportDirective",
+        "scope": 7028,
+        "sourceUnit": 7342,
+        "src": "26:69:21",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "@gnosis.pm/util-contracts/contracts/Proxy.sol",
+        "file": "@gnosis.pm/util-contracts/contracts/Proxy.sol",
+        "id": 6986,
+        "nodeType": "ImportDirective",
+        "scope": 7028,
+        "sourceUnit": 8505,
+        "src": "96:55:21",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 6987,
+              "name": "Proxy",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 8504,
+              "src": "179:5:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Proxy_$8504",
+                "typeString": "contract Proxy"
+              }
+            },
+            "id": 6988,
+            "nodeType": "InheritanceSpecifier",
+            "src": "179:5:21"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 6989,
+              "name": "GnosisStandardToken",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 7341,
+              "src": "186:19:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_GnosisStandardToken_$7341",
+                "typeString": "contract GnosisStandardToken"
+              }
+            },
+            "id": 6990,
+            "nodeType": "InheritanceSpecifier",
+            "src": "186:19:21"
+          }
+        ],
+        "contractDependencies": [
+          7147,
+          7341,
+          8475,
+          8504,
+          8573
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 7027,
+        "linearizedBaseContracts": [
+          7027,
+          7341,
+          7147,
+          8573,
+          8504,
+          8475
+        ],
+        "name": "TokenOWLProxy",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 6992,
+            "libraryName": {
+              "contractScope": null,
+              "id": 6991,
+              "name": "Math",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 8470,
+              "src": "218:4:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Math_$8470",
+                "typeString": "library Math"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "212:17:21",
+            "typeName": null
+          },
+          {
+            "constant": true,
+            "id": 6995,
+            "name": "name",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "235:41:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_memory",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 6993,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "235:6:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "4f574c20546f6b656e",
+              "id": 6994,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "string",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "265:11:21",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_stringliteral_edc9f761aaea66b294a860dc7c13020abf936d0f53d53060acf26aae3e657618",
+                "typeString": "literal_string \"OWL Token\""
+              },
+              "value": "OWL Token"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "id": 6998,
+            "name": "symbol",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "282:37:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_memory",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 6996,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "282:6:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "4f574c",
+              "id": 6997,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "string",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "314:5:21",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_stringliteral_705a97575c0cb3be0cd99a02813d16b4d8a8195c32a2cbdf1bb46a7e7e180f5c",
+                "typeString": "literal_string \"OWL\""
+              },
+              "value": "OWL"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "id": 7001,
+            "name": "decimals",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "325:35:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint8",
+              "typeString": "uint8"
+            },
+            "typeName": {
+              "id": 6999,
+              "name": "uint8",
+              "nodeType": "ElementaryTypeName",
+              "src": "325:5:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint8",
+                "typeString": "uint8"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "3138",
+              "id": 7000,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "358:2:21",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_18_by_1",
+                "typeString": "int_const 18"
+              },
+              "value": "18"
+            },
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "TokenOWLProxy.masterCopyCountdownType",
+            "id": 7006,
+            "members": [
+              {
+                "constant": false,
+                "id": 7003,
+                "name": "masterCopy",
+                "nodeType": "VariableDeclaration",
+                "scope": 7006,
+                "src": "408:18:21",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 7002,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "408:7:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 7005,
+                "name": "timeWhenAvailable",
+                "nodeType": "VariableDeclaration",
+                "scope": 7006,
+                "src": "436:22:21",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 7004,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "436:4:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "masterCopyCountdownType",
+            "nodeType": "StructDefinition",
+            "scope": 7027,
+            "src": "367:98:21",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 7008,
+            "name": "masterCopyCountdown",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "471:43:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_struct$_masterCopyCountdownType_$7006_storage",
+              "typeString": "struct TokenOWLProxy.masterCopyCountdownType"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 7007,
+              "name": "masterCopyCountdownType",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 7006,
+              "src": "471:23:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_masterCopyCountdownType_$7006_storage_ptr",
+                "typeString": "struct TokenOWLProxy.masterCopyCountdownType"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 7010,
+            "name": "creator",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "521:22:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 7009,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "521:7:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 7012,
+            "name": "minter",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "549:21:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 7011,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "549:7:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 7025,
+              "nodeType": "Block",
+              "src": "720:37:21",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 7023,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 7020,
+                      "name": "creator",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 7010,
+                      "src": "730:7:21",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 7021,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8588,
+                        "src": "740:3:21",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 7022,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "740:10:21",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "730:20:21",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 7024,
+                  "nodeType": "ExpressionStatement",
+                  "src": "730:20:21"
+                }
+              ]
+            },
+            "documentation": "@dev Constructor of the contract OWL, which distributes tokens",
+            "id": 7026,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 7017,
+                    "name": "proxied",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 7014,
+                    "src": "692:7:21",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 7018,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 7016,
+                  "name": "Proxy",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 8504,
+                  "src": "686:5:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Proxy_$8504_$",
+                    "typeString": "type(contract Proxy)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "686:14:21"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 7015,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 7014,
+                  "name": "proxied",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 7026,
+                  "src": "661:15:21",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 7013,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "661:7:21",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "660:17:21"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 7019,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "720:0:21"
+            },
+            "scope": 7027,
+            "src": "648:109:21",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 7028,
+        "src": "153:606:21"
+      }
+    ],
+    "src": "0:759:21"
+  },
+  "legacyAST": {
+    "absolutePath": "@gnosis.pm/owl-token/contracts/TokenOWLProxy.sol",
+    "exportedSymbols": {
+      "TokenOWLProxy": [
+        7027
+      ]
+    },
+    "id": 7028,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6984,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:21"
+      },
+      {
+        "absolutePath": "@gnosis.pm/util-contracts/contracts/GnosisStandardToken.sol",
+        "file": "@gnosis.pm/util-contracts/contracts/GnosisStandardToken.sol",
+        "id": 6985,
+        "nodeType": "ImportDirective",
+        "scope": 7028,
+        "sourceUnit": 7342,
+        "src": "26:69:21",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "@gnosis.pm/util-contracts/contracts/Proxy.sol",
+        "file": "@gnosis.pm/util-contracts/contracts/Proxy.sol",
+        "id": 6986,
+        "nodeType": "ImportDirective",
+        "scope": 7028,
+        "sourceUnit": 8505,
+        "src": "96:55:21",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 6987,
+              "name": "Proxy",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 8504,
+              "src": "179:5:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Proxy_$8504",
+                "typeString": "contract Proxy"
+              }
+            },
+            "id": 6988,
+            "nodeType": "InheritanceSpecifier",
+            "src": "179:5:21"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 6989,
+              "name": "GnosisStandardToken",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 7341,
+              "src": "186:19:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_GnosisStandardToken_$7341",
+                "typeString": "contract GnosisStandardToken"
+              }
+            },
+            "id": 6990,
+            "nodeType": "InheritanceSpecifier",
+            "src": "186:19:21"
+          }
+        ],
+        "contractDependencies": [
+          7147,
+          7341,
+          8475,
+          8504,
+          8573
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 7027,
+        "linearizedBaseContracts": [
+          7027,
+          7341,
+          7147,
+          8573,
+          8504,
+          8475
+        ],
+        "name": "TokenOWLProxy",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 6992,
+            "libraryName": {
+              "contractScope": null,
+              "id": 6991,
+              "name": "Math",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 8470,
+              "src": "218:4:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Math_$8470",
+                "typeString": "library Math"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "212:17:21",
+            "typeName": null
+          },
+          {
+            "constant": true,
+            "id": 6995,
+            "name": "name",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "235:41:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_memory",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 6993,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "235:6:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "4f574c20546f6b656e",
+              "id": 6994,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "string",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "265:11:21",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_stringliteral_edc9f761aaea66b294a860dc7c13020abf936d0f53d53060acf26aae3e657618",
+                "typeString": "literal_string \"OWL Token\""
+              },
+              "value": "OWL Token"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "id": 6998,
+            "name": "symbol",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "282:37:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_memory",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 6996,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "282:6:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "4f574c",
+              "id": 6997,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "string",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "314:5:21",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_stringliteral_705a97575c0cb3be0cd99a02813d16b4d8a8195c32a2cbdf1bb46a7e7e180f5c",
+                "typeString": "literal_string \"OWL\""
+              },
+              "value": "OWL"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "id": 7001,
+            "name": "decimals",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "325:35:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint8",
+              "typeString": "uint8"
+            },
+            "typeName": {
+              "id": 6999,
+              "name": "uint8",
+              "nodeType": "ElementaryTypeName",
+              "src": "325:5:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint8",
+                "typeString": "uint8"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "3138",
+              "id": 7000,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "358:2:21",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_18_by_1",
+                "typeString": "int_const 18"
+              },
+              "value": "18"
+            },
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "TokenOWLProxy.masterCopyCountdownType",
+            "id": 7006,
+            "members": [
+              {
+                "constant": false,
+                "id": 7003,
+                "name": "masterCopy",
+                "nodeType": "VariableDeclaration",
+                "scope": 7006,
+                "src": "408:18:21",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 7002,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "408:7:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 7005,
+                "name": "timeWhenAvailable",
+                "nodeType": "VariableDeclaration",
+                "scope": 7006,
+                "src": "436:22:21",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 7004,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "436:4:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "masterCopyCountdownType",
+            "nodeType": "StructDefinition",
+            "scope": 7027,
+            "src": "367:98:21",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 7008,
+            "name": "masterCopyCountdown",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "471:43:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_struct$_masterCopyCountdownType_$7006_storage",
+              "typeString": "struct TokenOWLProxy.masterCopyCountdownType"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 7007,
+              "name": "masterCopyCountdownType",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 7006,
+              "src": "471:23:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_masterCopyCountdownType_$7006_storage_ptr",
+                "typeString": "struct TokenOWLProxy.masterCopyCountdownType"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 7010,
+            "name": "creator",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "521:22:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 7009,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "521:7:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 7012,
+            "name": "minter",
+            "nodeType": "VariableDeclaration",
+            "scope": 7027,
+            "src": "549:21:21",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 7011,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "549:7:21",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 7025,
+              "nodeType": "Block",
+              "src": "720:37:21",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 7023,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 7020,
+                      "name": "creator",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 7010,
+                      "src": "730:7:21",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 7021,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8588,
+                        "src": "740:3:21",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 7022,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "740:10:21",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "730:20:21",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 7024,
+                  "nodeType": "ExpressionStatement",
+                  "src": "730:20:21"
+                }
+              ]
+            },
+            "documentation": "@dev Constructor of the contract OWL, which distributes tokens",
+            "id": 7026,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 7017,
+                    "name": "proxied",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 7014,
+                    "src": "692:7:21",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 7018,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 7016,
+                  "name": "Proxy",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 8504,
+                  "src": "686:5:21",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Proxy_$8504_$",
+                    "typeString": "type(contract Proxy)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "686:14:21"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 7015,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 7014,
+                  "name": "proxied",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 7026,
+                  "src": "661:15:21",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 7013,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "661:7:21",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "660:17:21"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 7019,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "720:0:21"
+            },
+            "scope": 7027,
+            "src": "648:109:21",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 7028,
+        "src": "153:606:21"
+      }
+    ],
+    "src": "0:759:21"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+  },
+  "networks": {
+    "1546526875566": {
+      "events": {},
+      "links": {},
+      "address": "0xf477fc27f5ff1ccb5fcc75cf3f7e10c8899797e6",
+      "transactionHash": "0x3fa48990c7e9bc32cb20e549df3c0cda5d31867541fdadef80144e1648f57368"
+    },
+    "1546599937853": {
+      "events": {},
+      "links": {},
+      "address": "0x1411cb266fced1587b0aa29e9d5a9ef3db64a9c5",
+      "transactionHash": "0xfe44a43d7564f413bf80653eb7a61c8abb6eb2bc810911150b2a3cabefa133a6"
+    }
+  },
+  "schemaVersion": "2.0.2",
+  "updatedAt": "2019-01-04T11:06:45.004Z"
+}

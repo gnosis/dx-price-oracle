@@ -1,0 +1,1050 @@
+{
+  "contractName": "AuctioneerManaged",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "auctioneer",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_auctioneer",
+          "type": "address"
+        }
+      ],
+      "name": "updateAuctioneer",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50610298806100206000396000f30060806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635ec2c7bf8114610050578063796a80761461008e575b600080fd5b34801561005c57600080fd5b506100656100be565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b34801561009a57600080fd5b506100bc73ffffffffffffffffffffffffffffffffffffffff600435166100da565b005b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60005473ffffffffffffffffffffffffffffffffffffffff16331461018657604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602a60248201527f4f6e6c79207468652061756374696f6e6565722063616e206e6f6d696e61746560448201527f2061206e6577206f6e6500000000000000000000000000000000000000000000606482015290519081900360840190fd5b73ffffffffffffffffffffffffffffffffffffffff8116151561023057604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602660248201527f5468652061756374696f6e656572206d75737420626520612076616c6964206160448201527f6464726573730000000000000000000000000000000000000000000000000000606482015290519081900360840190fd5b6000805473ffffffffffffffffffffffffffffffffffffffff191673ffffffffffffffffffffffffffffffffffffffff929092169190911790555600a165627a7a7230582013649d9226cbecff1f3ac3d83d72c48854cbcd580e32a3d6de9f60ad82cd65e90029",
+  "deployedBytecode": "0x60806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635ec2c7bf8114610050578063796a80761461008e575b600080fd5b34801561005c57600080fd5b506100656100be565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b34801561009a57600080fd5b506100bc73ffffffffffffffffffffffffffffffffffffffff600435166100da565b005b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60005473ffffffffffffffffffffffffffffffffffffffff16331461018657604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602a60248201527f4f6e6c79207468652061756374696f6e6565722063616e206e6f6d696e61746560448201527f2061206e6577206f6e6500000000000000000000000000000000000000000000606482015290519081900360840190fd5b73ffffffffffffffffffffffffffffffffffffffff8116151561023057604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602660248201527f5468652061756374696f6e656572206d75737420626520612076616c6964206160448201527f6464726573730000000000000000000000000000000000000000000000000000606482015290519081900360840190fd5b6000805473ffffffffffffffffffffffffffffffffffffffff191673ffffffffffffffffffffffffffffffffffffffff929092169190911790555600a165627a7a7230582013649d9226cbecff1f3ac3d83d72c48854cbcd580e32a3d6de9f60ad82cd65e90029",
+  "sourceMap": "26:663:13:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:663:13;;;;;;;",
+  "deployedSourceMap": "26:663:13:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;116:25;;8:9:-1;5:2;;;30:1;27;20:12;5:2;116:25:13;;;;;;;;;;;;;;;;;;;;;;;148:230;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;148:230:13;;;;;;;;;116:25;;;;;;:::o;148:230::-;612:10;;;;598;:24;590:79;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;269:25;;;;;261:76;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;347:10;:24;;-1:-1:-1;;347:24:13;;;;;;;;;;;;148:230::o",
+  "source": "pragma solidity ^0.4.11;\n\ncontract AuctioneerManaged {\n    // auctioneer has the power to manage some variables\n    address public auctioneer;\n\n    function updateAuctioneer(\n        address _auctioneer\n    )\n        public\n        onlyAuctioneer\n    {\n        require(_auctioneer != address(0), \"The auctioneer must be a valid address\");\n        auctioneer = _auctioneer;\n    }\n\n    // > Modifiers\n    modifier onlyAuctioneer() {\n        // Only allows auctioneer to proceed\n        // R1\n        // require(msg.sender == auctioneer, \"Only auctioneer can perform this operation\");\n        require(msg.sender == auctioneer, \"Only the auctioneer can nominate a new one\");\n        _;\n    }\n}",
+  "sourcePath": "/mnt/bf1642c6-3903-4bb8-b254-88a427e7ab47/Home/David/Documents/Work/Gnosis/dx-contracts/contracts/base/AuctioneerManaged.sol",
+  "ast": {
+    "absolutePath": "/mnt/bf1642c6-3903-4bb8-b254-88a427e7ab47/Home/David/Documents/Work/Gnosis/dx-contracts/contracts/base/AuctioneerManaged.sol",
+    "exportedSymbols": {
+      "AuctioneerManaged": [
+        6131
+      ]
+    },
+    "id": 6132,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6095,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".11"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:13"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 6131,
+        "linearizedBaseContracts": [
+          6131
+        ],
+        "name": "AuctioneerManaged",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 6097,
+            "name": "auctioneer",
+            "nodeType": "VariableDeclaration",
+            "scope": 6131,
+            "src": "116:25:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 6096,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "116:7:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 6117,
+              "nodeType": "Block",
+              "src": "251:127:13",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 6109,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 6105,
+                          "name": "_auctioneer",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6099,
+                          "src": "269:11:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 6107,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "292:1:13",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 6106,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "284:7:13",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 6108,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "284:10:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "269:25:13",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "5468652061756374696f6e656572206d75737420626520612076616c69642061646472657373",
+                        "id": 6110,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "296:40:13",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_90d06acdc193f2f98372accb0e3bfd06ca1ba67169cb7ded3d5b1cf67ee10428",
+                          "typeString": "literal_string \"The auctioneer must be a valid address\""
+                        },
+                        "value": "The auctioneer must be a valid address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_90d06acdc193f2f98372accb0e3bfd06ca1ba67169cb7ded3d5b1cf67ee10428",
+                          "typeString": "literal_string \"The auctioneer must be a valid address\""
+                        }
+                      ],
+                      "id": 6104,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        8591,
+                        8592
+                      ],
+                      "referencedDeclaration": 8592,
+                      "src": "261:7:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 6111,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "261:76:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 6112,
+                  "nodeType": "ExpressionStatement",
+                  "src": "261:76:13"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 6115,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 6113,
+                      "name": "auctioneer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6097,
+                      "src": "347:10:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 6114,
+                      "name": "_auctioneer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6099,
+                      "src": "360:11:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "347:24:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 6116,
+                  "nodeType": "ExpressionStatement",
+                  "src": "347:24:13"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 6118,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 6102,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 6101,
+                  "name": "onlyAuctioneer",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 6130,
+                  "src": "232:14:13",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "232:14:13"
+              }
+            ],
+            "name": "updateAuctioneer",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6100,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6099,
+                  "name": "_auctioneer",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6118,
+                  "src": "183:19:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6098,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "183:7:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "173:35:13"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 6103,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "251:0:13"
+            },
+            "scope": 6131,
+            "src": "148:230:13",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 6129,
+              "nodeType": "Block",
+              "src": "429:258:13",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 6124,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 6121,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 8588,
+                            "src": "598:3:13",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 6122,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "598:10:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 6123,
+                          "name": "auctioneer",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6097,
+                          "src": "612:10:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "598:24:13",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f6e6c79207468652061756374696f6e6565722063616e206e6f6d696e6174652061206e6577206f6e65",
+                        "id": 6125,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "624:44:13",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_a5f182243a3d7abbae15f22eb6d3815d377229e704afb084220eecfeae02fe35",
+                          "typeString": "literal_string \"Only the auctioneer can nominate a new one\""
+                        },
+                        "value": "Only the auctioneer can nominate a new one"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_a5f182243a3d7abbae15f22eb6d3815d377229e704afb084220eecfeae02fe35",
+                          "typeString": "literal_string \"Only the auctioneer can nominate a new one\""
+                        }
+                      ],
+                      "id": 6120,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        8591,
+                        8592
+                      ],
+                      "referencedDeclaration": 8592,
+                      "src": "590:7:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 6126,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "590:79:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 6127,
+                  "nodeType": "ExpressionStatement",
+                  "src": "590:79:13"
+                },
+                {
+                  "id": 6128,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "679:1:13"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 6130,
+            "name": "onlyAuctioneer",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 6119,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "426:2:13"
+            },
+            "src": "403:284:13",
+            "visibility": "internal"
+          }
+        ],
+        "scope": 6132,
+        "src": "26:663:13"
+      }
+    ],
+    "src": "0:689:13"
+  },
+  "legacyAST": {
+    "absolutePath": "/mnt/bf1642c6-3903-4bb8-b254-88a427e7ab47/Home/David/Documents/Work/Gnosis/dx-contracts/contracts/base/AuctioneerManaged.sol",
+    "exportedSymbols": {
+      "AuctioneerManaged": [
+        6131
+      ]
+    },
+    "id": 6132,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6095,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".11"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:13"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 6131,
+        "linearizedBaseContracts": [
+          6131
+        ],
+        "name": "AuctioneerManaged",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 6097,
+            "name": "auctioneer",
+            "nodeType": "VariableDeclaration",
+            "scope": 6131,
+            "src": "116:25:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 6096,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "116:7:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 6117,
+              "nodeType": "Block",
+              "src": "251:127:13",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 6109,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 6105,
+                          "name": "_auctioneer",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6099,
+                          "src": "269:11:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 6107,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "292:1:13",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 6106,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "284:7:13",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 6108,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "284:10:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "269:25:13",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "5468652061756374696f6e656572206d75737420626520612076616c69642061646472657373",
+                        "id": 6110,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "296:40:13",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_90d06acdc193f2f98372accb0e3bfd06ca1ba67169cb7ded3d5b1cf67ee10428",
+                          "typeString": "literal_string \"The auctioneer must be a valid address\""
+                        },
+                        "value": "The auctioneer must be a valid address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_90d06acdc193f2f98372accb0e3bfd06ca1ba67169cb7ded3d5b1cf67ee10428",
+                          "typeString": "literal_string \"The auctioneer must be a valid address\""
+                        }
+                      ],
+                      "id": 6104,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        8591,
+                        8592
+                      ],
+                      "referencedDeclaration": 8592,
+                      "src": "261:7:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 6111,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "261:76:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 6112,
+                  "nodeType": "ExpressionStatement",
+                  "src": "261:76:13"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 6115,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 6113,
+                      "name": "auctioneer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6097,
+                      "src": "347:10:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 6114,
+                      "name": "_auctioneer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6099,
+                      "src": "360:11:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "347:24:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 6116,
+                  "nodeType": "ExpressionStatement",
+                  "src": "347:24:13"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 6118,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 6102,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 6101,
+                  "name": "onlyAuctioneer",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 6130,
+                  "src": "232:14:13",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "232:14:13"
+              }
+            ],
+            "name": "updateAuctioneer",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6100,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6099,
+                  "name": "_auctioneer",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6118,
+                  "src": "183:19:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6098,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "183:7:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "173:35:13"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 6103,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "251:0:13"
+            },
+            "scope": 6131,
+            "src": "148:230:13",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 6129,
+              "nodeType": "Block",
+              "src": "429:258:13",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 6124,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 6121,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 8588,
+                            "src": "598:3:13",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 6122,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "598:10:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 6123,
+                          "name": "auctioneer",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6097,
+                          "src": "612:10:13",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "598:24:13",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f6e6c79207468652061756374696f6e6565722063616e206e6f6d696e6174652061206e6577206f6e65",
+                        "id": 6125,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "624:44:13",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_a5f182243a3d7abbae15f22eb6d3815d377229e704afb084220eecfeae02fe35",
+                          "typeString": "literal_string \"Only the auctioneer can nominate a new one\""
+                        },
+                        "value": "Only the auctioneer can nominate a new one"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_a5f182243a3d7abbae15f22eb6d3815d377229e704afb084220eecfeae02fe35",
+                          "typeString": "literal_string \"Only the auctioneer can nominate a new one\""
+                        }
+                      ],
+                      "id": 6120,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        8591,
+                        8592
+                      ],
+                      "referencedDeclaration": 8592,
+                      "src": "590:7:13",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 6126,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "590:79:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 6127,
+                  "nodeType": "ExpressionStatement",
+                  "src": "590:79:13"
+                },
+                {
+                  "id": 6128,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "679:1:13"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 6130,
+            "name": "onlyAuctioneer",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 6119,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "426:2:13"
+            },
+            "src": "403:284:13",
+            "visibility": "internal"
+          }
+        ],
+        "scope": 6132,
+        "src": "26:663:13"
+      }
+    ],
+    "src": "0:689:13"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.2",
+  "updatedAt": "2019-01-04T11:06:42.148Z"
+}

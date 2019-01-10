@@ -1,0 +1,35 @@
+{
+  "name": "dx-price-oracle",
+  "version": "0.1.0",
+  "description": "A reliable price oracle based on the DutchX protocol",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@gnosis.pm/dx-contracts": "^2.0.0-RC7"
+  },
+  "devDependencies": {
+    "@gnosis.pm/mock-contract": "^3.0.6",
+    "ethereumjs-abi": "^0.6.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnosis/dx-price-oracle.git"
+  },
+  "keywords": [
+    "etheruem",
+    "DutchX",
+    "price",
+    "oracle"
+  ],
+  "author": "Dominik Teiml - dominik@gnosis.pm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnosis/dx-price-oracle/issues"
+  },
+  "homepage": "https://github.com/gnosis/dx-price-oracle#readme"
+}

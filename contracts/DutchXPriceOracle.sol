@@ -1,39 +1,45 @@
 pragma solidity ^0.5.0;
 
-contract DutchX {
+interface DutchX {
     // TODO
 
-    mapping (address => bool) public approvedTokens;
+    function approvedTokens(address token)
+        external
+        view
+        returns (bool);
 
     function getAuctionIndex(
         address token1,
         address token2
     )
-        public
+        external
         view
         returns (uint auctionIndex);
 
-    function getAuctionStart(
+    function getClearingTime(
         address token1,
         address token2,
         uint auctionIndex
     )
-        public
+        external
         view
-        returns (uint auctionStart);
+        returns (uint time);
 
     function getPriceInPastAuction(
         address token1,
         address token2,
         uint auctionIndex
     )
-        public
+        external
         view
         // price < 10^31
         returns (uint num, uint den);
 }
 
 contract DutchXPriceOracle {
+
+    // TODO: Remove
+    event LogNumber(string s, uint n);
 
     DutchX dutchX;
     address ethToken;
@@ -50,11 +56,13 @@ contract DutchXPriceOracle {
         view
         returns (uint num, uint den)
     {
-        (num, den) = getPriceCustom(token, true, 4.5 days, 9);
+        (num, den) = getPriceCustom(token, 0, true, 4.5 days, 9);
     }
-    
+
+    /// @param maximumTimePeriod maximum time period between clearing time of last auction and time
     function getPriceCustom(
         address token,
+        uint time,
         bool requireWhitelisted,
         uint maximumTimePeriod,
         uint numberOfAuctions
@@ -68,19 +76,30 @@ contract DutchXPriceOracle {
             return (0, 0);
         }
 
+
+        address ethTokenMem = ethToken;
+        uint auctionIndex;
+        uint latestAuctionIndex = dutchX.getAuctionIndex(token, ethTokenMem);
+
+        if (time == 0) {
+            auctionIndex = latestAuctionIndex;
+            time = now;
+        } else {
+            auctionIndex = computeAuctionIndex(token, 1, latestAuctionIndex - 1, time);
+        }
+
         // Activity check
-        uint latestAuctionIndex = dutchX.getAuctionIndex(token, ethToken);
-        if (dutchX.getAuctionStart(token, ethToken, latestAuctionIndex - numberOfAuctions) < now - maximumTimePeriod) {
+        if (dutchX.getClearingTime(token, ethToken, auctionIndex - numberOfAuctions - 1) < time - maximumTimePeriod) {
             return (0, 0);
         }
 
-        (num, den) = getPricesAndMedian(token, numberOfAuctions, latestAuctionIndex);
+        (num, den) = getPricesAndMedian(token, numberOfAuctions, auctionIndex);
     }
 
     function getPricesAndMedian(
         address token,
         uint numberOfAuctions,
-        uint latestAuctionIndex
+        uint auctionIndex
     )
         public
         view
@@ -94,7 +113,7 @@ contract DutchXPriceOracle {
         for (uint i = 0; i < numberOfAuctions; i++) {
             // Loop begins by calling auction index lAI - 1 and ends by calling lAI - numberOfAcutions
             // That gives numberOfAuctions calls
-            (uint num, uint den) = dutchX.getPriceInPastAuction(token, ethToken, latestAuctionIndex - 1 - i);
+            (uint num, uint den) = dutchX.getPriceInPastAuction(token, ethToken, auctionIndex - 1 - i);
 
             (nums[i], dens[i]) = (num, den);
 
@@ -148,6 +167,31 @@ contract DutchXPriceOracle {
             uint den = 2 * dens[index] * dens[nextIndex];
 
             return (num, den);
+        }
+    }
+
+    function computeAuctionIndex(address token, uint lowerBound, uint upperBound, uint time)
+        public
+        view
+        returns (uint)
+    {
+        uint mid = (lowerBound + upperBound) / 2;
+        uint clearingTime = dutchX.getClearingTime(token, ethToken, mid);
+
+        if (time < clearingTime) {
+            if (upperBound - lowerBound == 1) {
+                return lowerBound;
+            } else {
+                return computeAuctionIndex(token, lowerBound, mid, time);
+            }
+        } else if (clearingTime == time) {
+            return mid;
+        } else {
+            if (upperBound - lowerBound == 1) {
+                return mid;
+            } else {
+                return computeAuctionIndex(token, mid, upperBound, time);
+            }
         }
     }
 
