@@ -63,8 +63,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 		await addToMock(
 			mock, 'approvedTokens(address):(bool)',
 			[address],
-			[shouldBeWhitelisted ? '1' : '']
-		)
+			[shouldBeWhitelisted ? '1' : ''])
 
 		const isWhitelisted = await priceOracle.isWhitelisted(address)		
 

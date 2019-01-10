@@ -155,19 +155,9 @@ contract DutchXPriceOracle {
             index = linkedListOfIndices[index];
         }
 
-        if (numberOfAuctions % 2 == 1) {
-            // odd number of auctions
-            return (nums[index], dens[index]);
-        } else {
-            // get next element
-            uint nextIndex = linkedListOfIndices[index];
-        
-            // return average
-            uint num = nums[index] * dens[nextIndex] + nums[nextIndex] * dens[index];
-            uint den = 2 * dens[index] * dens[nextIndex];
-
-            return (num, den);
-        }
+        // We return floor-of-half value, because if we computed arithmetic average
+        // between two middle values, the order of the numbers would increase
+        return (nums[index], dens[index])
     }
 
     function computeAuctionIndex(address token, uint lowerBound, uint upperBound, uint time)
