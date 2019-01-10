@@ -157,7 +157,7 @@ contract DutchXPriceOracle {
 
         // We return floor-of-half value, because if we computed arithmetic average
         // between two middle values, the order of the numbers would increase
-        return (nums[index], dens[index])
+        return (nums[index], dens[index]);
     }
 
     function computeAuctionIndex(address token, uint lowerBound, uint upperBound, uint time)

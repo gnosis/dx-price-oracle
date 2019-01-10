@@ -23,7 +23,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 	let dutchX
 	let priceOracle
 
-	beforeEach(async () => {
+	before(async () => {
 		// Instantiate mock
 		mock = await MockContract.new()
 		await generateDutchX(mock, tokenA, ethToken)
