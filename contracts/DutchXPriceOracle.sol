@@ -76,8 +76,8 @@ contract DutchXPriceOracle {
             return (0, 0);
         }
 
-
         address ethTokenMem = ethToken;
+
         uint auctionIndex;
         uint latestAuctionIndex = dutchX.getAuctionIndex(token, ethTokenMem);
 
@@ -89,7 +89,7 @@ contract DutchXPriceOracle {
         }
 
         // Activity check
-        if (dutchX.getClearingTime(token, ethToken, auctionIndex - numberOfAuctions - 1) < time - maximumTimePeriod) {
+        if (dutchX.getClearingTime(token, ethTokenMem, auctionIndex - numberOfAuctions - 1) < time - maximumTimePeriod) {
             return (0, 0);
         }
 
@@ -167,12 +167,18 @@ contract DutchXPriceOracle {
         view
         returns (uint)
     {
+        require(lowerBound > 0, "lowerBound too small");
+
         uint mid = (lowerBound + upperBound) / 2;
         uint clearingTime = dutchX.getClearingTime(token, ethToken, mid);
 
         if (time < clearingTime) {
             if (upperBound - lowerBound == 1) {
-                return lowerBound;
+                if (lowerBound == 1) {
+                    revert("time too small");
+                } else {
+                    return lowerBound;
+                }
             } else {
                 return computeAuctionIndex(token, lowerBound, mid, time);
             }
