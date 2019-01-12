@@ -276,6 +276,10 @@ contract DutchXPriceOracle {
         pure
         returns (bool)
     {
+        // Safe math
+        require(den2 == 0 || num1 * den2 / den2 == num1, "overflow");
+        require(den1 == 0 || num2 * den1 / den1 == num2, "overflow");
+
         return (num1 * den2 < num2 * den1);
     }
 

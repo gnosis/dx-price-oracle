@@ -150,11 +150,11 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 		logger('testGetPriceCustom() called with:')
-		logger('whitelist: ',whitelist)
-		logger('time: ', time)
-		logger('requireWhitelisted: ', requireWhitelisted)
-		logger('passesActivityCheck: ', passesActivityCheck)
-		logger('latestAuctionIndex: ', latestAuctionIndex)
+		logger('\twhitelist: ',whitelist)
+		logger('\ttime: ', time)
+		logger('\trequireWhitelisted: ', requireWhitelisted)
+		logger('\tpassesActivityCheck: ', passesActivityCheck)
+		logger('\tlatestAuctionIndex: ', latestAuctionIndex)
 		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
 		if (whitelist) {
@@ -174,8 +174,8 @@ contract('DutchXPriceOracle', async (accounts) => {
 			currentTime = time
 		}
 
-		logger('testGetPriceCustom auctionIndex', auctionIndex)
-		logger('testGetPriceCustom currentTime', currentTime)
+		logger('\ttestGetPriceCustom auctionIndex', auctionIndex)
+		logger('\ttestGetPriceCustom currentTime', currentTime)
 
 		const numberOfAuctions = rand(1, auctionIndex - 1)
 		const clearingTime = await getClearingTime(auctionIndex - numberOfAuctions - 1)
@@ -254,21 +254,21 @@ contract('DutchXPriceOracle', async (accounts) => {
 	async function testComputeAuctionIndex(expectedAuctionIndex, latestAuctionIndex) {
 
 		logger('testComputeAuctionIndex() called with:')
-		logger('expectedAuctionIndex: ', expectedAuctionIndex)
-		logger('latestAuctionIndex: ', latestAuctionIndex)
+		logger('\texpectedAuctionIndex: ', expectedAuctionIndex)
+		logger('\tlatestAuctionIndex: ', latestAuctionIndex)
 
 		const clearingTime = await getClearingTime(1)
 		time = clearingTime + 30000 * (expectedAuctionIndex - 1)
 
-		logger('testComputeAuctionIndex() clearingTime', clearingTime)
+		logger('\ttestComputeAuctionIndex() clearingTime', clearingTime)
 
 		const auctionIndexSol = (await priceOracle.computeAuctionIndex(tokenA, 1, latestAuctionIndex - 1, latestAuctionIndex - 1, time)).toNumber()
 
-		logger('testComputeAuctionIndex() auctionIndexSol', auctionIndexSol)
+		logger('\ttestComputeAuctionIndex() auctionIndexSol', auctionIndexSol)
 
 		const auctionIndexJS = await computeAuctionIndex(time, latestAuctionIndex)
 
-		logger('testComputeAuctionIndex() auctionIndexJS', auctionIndexJS)
+		logger('\ttestComputeAuctionIndex() auctionIndexJS', auctionIndexJS)
 
 		assert.equal(auctionIndexSol, auctionIndexJS, 'computeAuctionIndex not correct')
 	}
@@ -314,16 +314,18 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 	async function getPriceCustom(time, requireWhitelisted, maximumTimePeriod, numberOfAuctions) {
 		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-		logger('getetPriceCustom() called with:')
-		logger('time: ', time)
-		logger('maximumTimePeriod: ', maximumTimePeriod)
-		logger('numberOfAuctions: ', numberOfAuctions)
+		logger('getPriceCustom() called with:')
+		logger('\ttime: ', time)
+		logger('\tmaximumTimePeriod: ', maximumTimePeriod)
+		logger('\tnumberOfAuctions: ', numberOfAuctions)
 		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 		const result = await priceOracle.getPriceCustom(tokenA, time, requireWhitelisted,
 			maximumTimePeriod, numberOfAuctions)
-		return parseResult(result)
 
-		logger('getPriceCustom() returning', parseResult)
+		const returnValue = parseResult(result)
+
+		logger('getPriceCustom() returning', returnValue)
+		return returnValue
 	}
 
 	function parseResult(result) {

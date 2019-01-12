@@ -1,6 +1,6 @@
 const abi = require('ethereumjs-abi')
 
-const { rand } = require('./utils')
+const { logger, rand } = require('./utils')
 
 // 21600 = 6 hours
 const WAITING_PERIOD_NEW_TOKEN_PAIR = 21600
@@ -11,7 +11,7 @@ const getPriceInPastAuction = 'getPriceInPastAuction(address,address,uint256):(u
 const getClearingTime = 'getClearingTime(address,address,uint256):(uint256)'
 const getAuctionIndex = 'getAuctionIndex(address,address):(uint256)'
 
-const numberOfAuctions = 50
+const numberOfAuctions = 200
 
 async function generateDutchX(mock, tokenA, tokenB) {
 
@@ -24,7 +24,7 @@ async function generateDutchX(mock, tokenA, tokenB) {
 
     // Generate auctions and print
     const auctions = generateAuctions(
-        numberOfAuctions, [], currentDate, 100, 200, 10, 20, 10000, 50000)
+        numberOfAuctions, [], currentDate, 1e6, 1e12, 1e6, 1e12, 10000, 50000)
     
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     console.log(auctions)
