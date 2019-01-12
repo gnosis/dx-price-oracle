@@ -1,6 +1,9 @@
 const abi = require('ethereumjs-abi')
 
+// 21600 = 6 hours
 const WAITING_PERIOD_NEW_TOKEN_PAIR = 21600
+// 600 = 10 minutes
+WAITING_PERIOD_NEW_AUCTION = 600
 
 // 1/1/2019 in Unix time stamp
 const date112019 = 1546300800
@@ -83,7 +86,11 @@ function generateAuctions(
         let clearingTime = auctions[auctionIndex - 1].clearingTime + rand(minLength, maxLength)
 
         if (auctionIndex === 1) {
+            // Second auction begins after 6 hours of adding token pair
             clearingTime += WAITING_PERIOD_NEW_TOKEN_PAIR
+        } else {
+            // Other auctions begins at least 10 minutes after adding token pair
+            clearingTime += WAITING_PERIOD_NEW_AUCTION
         }
 
         auctions.push({ 

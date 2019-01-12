@@ -10,6 +10,8 @@
 
 // const log = silent ? () => { } : console.log.bind(console)
 
+const timestamp = async (block = 'latest') => await web3.eth.getBlock(block).timestamp
+
 const assertRejects = async (q, msg) => {
     let res, catchFlag = false
     try {
@@ -26,6 +28,7 @@ const assertRejects = async (q, msg) => {
 }
 
 module.exports = {
+    timestamp,
     assertRejects,
     // log,
 }

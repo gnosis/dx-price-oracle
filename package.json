@@ -10,6 +10,7 @@
     "@gnosis.pm/dx-contracts": "^2.0.0-RC7"
   },
   "devDependencies": {
+    "@digix/tempo": "^0.2.0",
     "@gnosis.pm/mock-contract": "^3.0.6",
     "ethereumjs-abi": "^0.6.5"
   },

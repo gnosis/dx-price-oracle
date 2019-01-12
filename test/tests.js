@@ -1,8 +1,12 @@
 const abi = require('ethereumjs-abi')
+const { wait } = require('@digix/tempo')(web3)
 
-const { assertRejects } = require('./utils')
+// Make @digix/tempo work with web3 1.0.0
+web3.providers.HttpProvider.prototype.sendAsync = web3.providers.HttpProvider.prototype.send
 
-const { date112019, rand, generateDutchX, addToMock } = require('./constants')
+const { timestamp, assertRejects } = require('./utils')
+
+const { date112019, rand, generateDutchX, addToMock } = require('./auctions')
 
 const DutchXPriceOracle = artifacts.require('DutchXPriceOracle')
 const DutchX = artifacts.require('DutchExchange')
@@ -38,9 +42,20 @@ contract('DutchXPriceOracle', async (accounts) => {
 	})
 
 	it('getPrice() correct', async () => {
-		// 388800 = 4.5 days
-		await testGetPriceCustom(0, true, 388800, 9, true)
-		await testGetPriceCustom(0, true, 388800, 9, false)
+		console.log('0',)
+		addToMock(mock, approvedTokens, [tokenA], ['true'])
+		console.log('1',)
+		const result = await priceOracle.getPriceCustom(tokenA, 0, true, 388800, 9)
+		// const result = await priceOracle.getPrice(tokenA)
+		const medianSol = result['0'].toNumber() / result['1'].toNumber()
+
+		console.log('2 medianSol',medianSol)
+		const auctionIndex = (await dutchX.getAuctionIndex(tokenA, ethToken)).toNumber()
+		console.log('3 auctionIndex',auctionIndex)
+		const medianJS = await getPricesAndMedian(9, auctionIndex)
+		console.log('4',medianJS)
+
+		assert.equal(medianSol, medianJS, 'getPrice() not correct')
 	})
 
 	it('getPriceCustom() correct', async () => {
@@ -48,13 +63,10 @@ contract('DutchXPriceOracle', async (accounts) => {
 		const secondClearingTime = (await dutchX.getClearingTime(tokenA, ethToken, 2)).toNumber()
 		const lastClearingTime = (await dutchX.getClearingTime(tokenA, ethToken, latestAuctionIndex - 1)).toNumber()
 
-		let time, requireWhitelisted, whitelist, maximumTimePeriod
+		let time, requireWhitelisted, whitelist, passesActivityCheck
 		for (let i = 0; i < 16; i++) {
 			if (i % 2 <= 0) time = 0
 			else time = rand(secondClearingTime, lastClearingTime)
-
-			const auctionIndex = await computeAuctionIndex(time, latestAuctionIndex)
-			const numberOfAuctions = rand(1, auctionIndex)
 
 			if (i % 4 <= 1) requireWhitelisted = true
 			else requireWhitelisted = false
@@ -62,26 +74,18 @@ contract('DutchXPriceOracle', async (accounts) => {
 			if (i % 8 <= 3) whitelist = true
 			else whitelist = false
 
-			if (i % 16 <= 7) {
-				// Fails activity check
+			if (i % 16 <= 7) passesActivityCheck = false
+			else passesActivityCheck = true
 
-				// We need maximumTimePeriod < time - clearingTime of auction before
-				// maximumTimePeriod = - 1
+			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+			console.log('4', i, whitelist, time, 
+				requireWhitelisted, passesActivityCheck, latestAuctionIndex)
+			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+			
 
-			} else {
-				// Passes activity check
-
-
-			}
-
-
-			// await testGetPriceCustom(time, requireWhitelisted, whitelist)
+			await testGetPriceCustom(whitelist, time, requireWhitelisted,
+				passesActivityCheck, latestAuctionIndex)
 		}
-		// await testGetPriceCustom(0, true, 388800, 9, false)
-		// await testGetPriceCustom(0, true, 388800, 9, true)
-		// await testGetPriceCustom(0, false, 388800, 9, true)
-		// await testGetPriceCustom(0, false, 388800, 9, false)
-		// await testGetPriceCustom()
 	})
 
 	it('getPricesAndMedian() correct', async () => {
@@ -113,49 +117,112 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		// should revert if time < clearingTime[0]
 		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
-			latestAuctionIndex - 1, date112019 - 20000))
+			latestAuctionIndex - 1, latestAuctionIndex - 1, date112019 - 20000))
 		// should revert if clearingTime[0] < time < clearingTime[1]
 		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
-			latestAuctionIndex - 1, date112019 + 20000))
-
-		// should revert if lowerBound is 0
-		const clearingTime = (await dutchX.getClearingTime(tokenA, ethToken, 
-			latestAuctionIndex / 2)).toNumber()
-		assertRejects(priceOracle.computeAuctionIndex(tokenA, 0, 
-			latestAuctionIndex - 1, clearingTime))
+			latestAuctionIndex - 1, latestAuctionIndex - 1, date112019 + 20000))
 
 		// otherwise, should succeed
-		for (let i = 1; i < latestAuctionIndex; i +=3) {			
+		for (let i = 1; i < latestAuctionIndex; i +=3) {
+			// console.log('i, latestAuctionIndex',i,latestAuctionIndex)		
 			await testComputeAuctionIndex(i, latestAuctionIndex)
 		}		
 	})
 
 	async function testGetPriceCustom(
+		whitelist,
 		time, 
 		requireWhitelisted, 
-		maximumTimePeriod, 
-		numberOfAuctions, 
-		whitelist
+		passesActivityCheck,
+		latestAuctionIndex
 	) {
 		if (whitelist) {
+			console.log('5.1 whitelist',whitelist)
+			addToMock(mock, approvedTokens, [tokenA], ['true'])
+		} else {
+			console.log('5.2 whitelist',whitelist)
 			addToMock(mock, approvedTokens, [tokenA], [''])
 		}
 
-		if (requireWhitelisted && !whitelist) {
-			const result = await priceOracle.getPriceCustom(tokenA, time, true, 
-			maximumTimePeriod, numberOfAuctions)
+		let auctionIndex
+		let currentTime
 
-			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-			console.log('result',result)
-			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-			
-
-			const num = result['0'].toNumber()
-			assert.equal(num, 0, 'num not correct in getPriceCustom unwhitelisted')
-
-			const den = result['1'].toNumber()
-			assert.equal(den, 0, 'den not correct in getPriceCustom unwhitelisted')
+		if (time == 0) {
+			auctionIndex = latestAuctionIndex
+			console.log('7.1 auctionIndex',auctionIndex)
+			const lastClearingTime = (await dutchX.getClearingTime(tokenA, ethToken, auctionIndex - 1)).toNumber()
+			console.log('7.2 lastClearingTime',lastClearingTime)
+			const ganacheTime = (await web3.eth.getBlock('latest')).timestamp
+			console.log('7.3 ganacheTime',ganacheTime)
+			currentTime = lastClearingTime > ganacheTime ? lastClearingTime : ganacheTime
+			console.log('7.4 currentTime',currentTime)
+			await wait(currentTime - ganacheTime)
+		} else {
+			auctionIndex = await computeAuctionIndex(time, latestAuctionIndex) + 1
+			console.log('7.5 auctionIndex',auctionIndex)
+			currentTime = time
+			console.log('7.6 currentTime',currentTime)
 		}
+
+		const numberOfAuctions = rand(1, auctionIndex - 1)
+		console.log('7.7 numberOfAuctions',numberOfAuctions)
+		const clearingTime = (await dutchX.getClearingTime(tokenA, ethToken, auctionIndex - numberOfAuctions - 1)).toNumber()
+		console.log('7.3 clearingTime',clearingTime)
+		console.log('7.4 time',time)
+		
+		if (!passesActivityCheck) {
+			// Fails activity check
+			// We need maximumTimePeriod < time - clearingTime of auction before
+			// Actual time will be slightly larger than currentTime
+			// (since it will be next block's time)
+			const maximumTimePeriod = currentTime - clearingTime - 120
+
+			console.log('9 maximumTimePeriod',maximumTimePeriod)
+
+
+			const result = await priceOracle.getPriceCustom(tokenA, time, false,
+				maximumTimePeriod, numberOfAuctions)
+
+			console.log('10 result',result)
+
+			const resultParsed = [result['0'].toNumber(), result['1'].toNumber()]
+			assert.deepEqual(resultParsed, [0, 0], 'getPriceCustom() activity check fail not correct')
+
+			return
+		}
+
+		// Passes activity check
+		const maximumTimePeriod = currentTime - clearingTime
+		console.log('11 maximumTimePeriod',maximumTimePeriod)
+
+		if (requireWhitelisted && !whitelist) {
+			// Failure case
+
+			console.log('6 requireWhitelisted',requireWhitelisted)
+
+			const result = await priceOracle.getPriceCustom(tokenA, time, true,
+				maximumTimePeriod, numberOfAuctions)
+
+			console.log('7 result',result)
+
+			const resultParsed = [result['0'].toNumber(), result['1'].toNumber()]
+			assert.deepEqual(resultParsed, [0, 0], 'getPriceCustom() unwhitelisted not correct')
+
+			return
+		}
+
+		const result = await priceOracle.getPriceCustom(tokenA, time, false,
+				maximumTimePeriod, numberOfAuctions)
+
+		console.log('12 result',result)
+
+		const medianSol = result['0'].toNumber() / result['1'].toNumber()
+
+		const medianJS = await getPricesAndMedian(numberOfAuctions, auctionIndex)
+
+		console.log('13 medianJS',medianJS)
+
+		assert.equal(medianSol, medianJS, 'getPriceCustom() not correct')
 	}
 
 	async function testGetPricesAndMedian(numberOfAuctions, auctionIndex) {
@@ -163,6 +230,12 @@ contract('DutchXPriceOracle', async (accounts) => {
 		const price = (await priceOracle.getPricesAndMedian(tokenA, numberOfAuctions, auctionIndex))
 		const medianSol = price['0'].toNumber() / price['1'].toNumber()
 
+		const medianJS = await getPricesAndMedian(numberOfAuctions, auctionIndex)
+
+		assert.equal(medianSol, medianJS, 'getPricesAndMedian() not correct')
+	}
+
+	async function getPricesAndMedian(numberOfAuctions, auctionIndex) {
 		const pricesJS = []
 
 		for (let i = 0; i < numberOfAuctions; i++) {
@@ -172,9 +245,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		pricesJS.sort((a, b) => a - b)
 
-		const medianJS = pricesJS[Math.floor((pricesJS.length - 1) / 2)]
-
-		assert.equal(medianSol, medianJS, 'getPricesAndMedian() not correct')
+		return pricesJS[Math.floor((pricesJS.length - 1) / 2)]
 	}
 
 	async function testIsWhitelisted(address, shouldBeWhitelisted) {
@@ -199,12 +270,20 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 	async function testComputeAuctionIndex(expectedAuctionIndex, latestAuctionIndex) {
 
+		// console.log('A expectedAuctionIndex, latestAuctionIndex',expectedAuctionIndex, latestAuctionIndex)
+
 		const clearingTime = (await dutchX.getClearingTime(tokenA, ethToken, 1)).toNumber()
 		time = clearingTime + 30000 * (expectedAuctionIndex - 1)
 
-		const auctionIndexSol = (await priceOracle.computeAuctionIndex(tokenA, 1, latestAuctionIndex - 1, time)).toNumber()
+		// console.log('B clearingTime',clearingTime)
+
+		const auctionIndexSol = (await priceOracle.computeAuctionIndex(tokenA, 1, latestAuctionIndex - 1, latestAuctionIndex - 1, time)).toNumber()
+
+		// console.log('C auctionIndexSol',auctionIndexSol)
 
 		const auctionIndexJS = await computeAuctionIndex(time, latestAuctionIndex)
+
+		// console.log('D auctionIndexJS',auctionIndexJS)
 
 		assert.equal(auctionIndexSol, auctionIndexJS, 'computeAuctionIndex not correct')
 	}
@@ -218,7 +297,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 				break
 			}
 			
-			const clearingTime = await dutchX.getClearingTime(tokenA, ethToken, i)
+			const clearingTime = (await dutchX.getClearingTime(tokenA, ethToken, i)).toNumber()
 
 			if (time < clearingTime) {
 				larger = true

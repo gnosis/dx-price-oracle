@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 interface DutchX {
     // TODO
 
-    function approvedTokens(address token)
+    function approvedTokens(address)
         external
         view
         returns (bool);
@@ -37,9 +37,6 @@ interface DutchX {
 }
 
 contract DutchXPriceOracle {
-
-    // TODO: Remove
-    event LogNumber(string s, uint n);
 
     DutchX dutchX;
     address ethToken;
@@ -85,7 +82,8 @@ contract DutchXPriceOracle {
             auctionIndex = latestAuctionIndex;
             time = now;
         } else {
-            auctionIndex = computeAuctionIndex(token, 1, latestAuctionIndex - 1, time);
+            auctionIndex = computeAuctionIndex(token, 1, 
+                latestAuctionIndex - 1, latestAuctionIndex - 1, time) + 1;
         }
 
         // Activity check
@@ -162,34 +160,58 @@ contract DutchXPriceOracle {
         return (nums[index], dens[index]);
     }
 
-    function computeAuctionIndex(address token, uint lowerBound, uint upperBound, uint time)
+    function computeAuctionIndex(
+        address token,
+        uint lowerBound, 
+        uint initialUpperBound,
+        uint upperBound,
+        uint time
+    )
         public
         view
         returns (uint)
     {
-        require(lowerBound > 0, "lowerBound too small");
+        // computeAuctionIndex works by recursively lowering lower and upperBound
+        // The result begins in [lowerBound, upperBound] (invariant)
+        // If we never decrease the upperBound, it will stay in that range
+        // If we ever decrease it, the result will be in [lowerBound, upperBound - 1]
+
+        uint clearingTime;
+
+        if (upperBound - lowerBound == 1) {
+            // Recursion base case
+
+            if (lowerBound <= 1) {
+                clearingTime = dutchX.getClearingTime(token, ethToken, lowerBound); 
+
+                if (time < clearingTime) {
+                    revert("time too small");
+                }
+            }
+
+            if (upperBound == initialUpperBound) {
+                clearingTime = dutchX.getClearingTime(token, ethToken, upperBound);
+
+                if (time < clearingTime) {
+                    return lowerBound;
+                } else {
+                    // Can only happen if answer is initialUpperBound
+                    return upperBound;
+                }            
+            } else {
+                return lowerBound;
+            }
+        }
 
         uint mid = (lowerBound + upperBound) / 2;
-        uint clearingTime = dutchX.getClearingTime(token, ethToken, mid);
+        clearingTime = dutchX.getClearingTime(token, ethToken, mid);
 
         if (time < clearingTime) {
-            if (upperBound - lowerBound == 1) {
-                if (lowerBound == 1) {
-                    revert("time too small");
-                } else {
-                    return lowerBound;
-                }
-            } else {
-                return computeAuctionIndex(token, lowerBound, mid, time);
-            }
-        } else if (clearingTime == time) {
+            return computeAuctionIndex(token, lowerBound, initialUpperBound, mid, time);
+        } else if (time == clearingTime) {
             return mid;
         } else {
-            if (upperBound - lowerBound == 1) {
-                return mid;
-            } else {
-                return computeAuctionIndex(token, mid, upperBound, time);
-            }
+            return computeAuctionIndex(token, mid, initialUpperBound, upperBound, time);
         }
     }
 
@@ -204,7 +226,7 @@ contract DutchXPriceOracle {
     function isWhitelisted(address token) 
         public
         view
-        returns (bool)
+        returns (bool) 
     {
         return dutchX.approvedTokens(token);
     }
