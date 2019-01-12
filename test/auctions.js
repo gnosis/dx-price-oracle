@@ -6,7 +6,7 @@ const WAITING_PERIOD_NEW_TOKEN_PAIR = 21600
 WAITING_PERIOD_NEW_AUCTION = 600
 
 // 1/1/2019 in Unix time stamp
-const date112019 = 1546300800
+const currentDate = Math.floor(new Date() / 1000)
 
 const getPriceInPastAuction = 'getPriceInPastAuction(address,address,uint256):(uint256,uint256)'
 const getClearingTime = 'getClearingTime(address,address,uint256):(uint256)'
@@ -20,13 +20,15 @@ async function generateDutchX(mock, tokenA, tokenB) {
     // hence latestAuctionIndex will be numberOfAuctions
     await addToMock(mock, getAuctionIndex, [tokenA, tokenB], [numberOfAuctions])
 
+    // Generate auctions and print
     const auctions = generateAuctions(
-        numberOfAuctions, [], date112019, 100, 200, 10, 20, 10000, 50000)
+        numberOfAuctions, [], currentDate, 100, 200, 10, 20, 10000, 50000)
     
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     console.log('auctions', auctions)
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        
+    
+    // Add all auctions to mock
     await generateMock(auctions, 0, mock, tokenA, tokenB)
 }
 
@@ -119,7 +121,7 @@ function rand(min, max) {
 }
 
 module.exports = {
-    date112019,
+    currentDate,
     rand,
     generateDutchX,
     addToMock,

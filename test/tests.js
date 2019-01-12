@@ -6,7 +6,7 @@ web3.providers.HttpProvider.prototype.sendAsync = web3.providers.HttpProvider.pr
 
 const { timestamp, assertRejects } = require('./utils')
 
-const { date112019, rand, generateDutchX, addToMock } = require('./auctions')
+const { rand, generateDutchX, addToMock } = require('./auctions')
 
 const DutchXPriceOracle = artifacts.require('DutchXPriceOracle')
 const DutchX = artifacts.require('DutchExchange')
@@ -34,8 +34,16 @@ contract('DutchXPriceOracle', async (accounts) => {
 	before(async () => {
 		// Instantiate mock
 		mock = await MockContract.new()
+
+		// Generate auctions, save to mock, and give it DutchX-abi
 		await generateDutchX(mock, tokenA, ethToken)
 		dutchX = await DutchX.at(mock.address)
+
+		// Move ganache time to after last clearing time
+		const auctionIndex = await getAuctionIndex()
+		const clearingTime = await getClearingTime(auctionIndex - 1)
+		await waitUntil(clearingTime + 100)
+		
 		
 		// Instantiate DutchXPriceOracle with mock as DutchX
 		priceOracle = await DutchXPriceOracle.new(mock.address, ethToken)
@@ -51,7 +59,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 		const auctionIndex = await getAuctionIndex()
 		console.log('3 auctionIndex',auctionIndex)
 		const medianJS = await getPricesAndMedian(9, auctionIndex)
-		console.log('4',medianJS)
+		console.log('4 medianJS',medianJS)
 
 		assert.equal(medianSol, medianJS, 'getPrice() not correct')
 	})
@@ -113,12 +121,14 @@ contract('DutchXPriceOracle', async (accounts) => {
 	it('computeAuctionIndex() correct', async () => {
 		const latestAuctionIndex = await getAuctionIndex()
 
+		const firstTime = await getClearingTime(0)
+
 		// should revert if time < clearingTime[0]
 		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
-			latestAuctionIndex - 1, latestAuctionIndex - 1, date112019 - 20000))
+			latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime - 20000))
 		// should revert if clearingTime[0] < time < clearingTime[1]
 		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
-			latestAuctionIndex - 1, latestAuctionIndex - 1, date112019 + 20000))
+			latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime + 20000))
 
 		// otherwise, should succeed
 		for (let i = 1; i < latestAuctionIndex; i +=3) {
@@ -148,13 +158,11 @@ contract('DutchXPriceOracle', async (accounts) => {
 		if (time == 0) {
 			auctionIndex = latestAuctionIndex
 			console.log('7.1 auctionIndex',auctionIndex)
-			const lastClearingTime = await getClearingTime(auctionIndex - 1)
-			console.log('7.2 lastClearingTime',lastClearingTime)
-			const ganacheTime = (await web3.eth.getBlock('latest')).timestamp
-			console.log('7.3 ganacheTime',ganacheTime)
-			currentTime = lastClearingTime > ganacheTime ? lastClearingTime : ganacheTime
-			console.log('7.4 currentTime',currentTime)
-			await wait(currentTime - ganacheTime)
+			// const lastClearingTime = await getClearingTime(auctionIndex - 1)
+			// console.log('7.2 lastClearingTime',lastClearingTime)
+			// const ganacheTime = await getTime()
+			// console.log('7.3 ganacheTime',ganacheTime)
+			currentTime = await getTime()
 		} else {
 			auctionIndex = await computeAuctionIndex(time, latestAuctionIndex) + 1
 			console.log('7.5 auctionIndex',auctionIndex)
@@ -173,7 +181,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 			// We need maximumTimePeriod < time - clearingTime of auction before
 			// Actual time will be slightly larger than currentTime
 			// (since it will be next block's time)
-			const maximumTimePeriod = currentTime - clearingTime - 120
+			const maximumTimePeriod = currentTime - clearingTime - 1
 
 			console.log('9 maximumTimePeriod',maximumTimePeriod)
 
@@ -185,7 +193,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 		}
 
 		// Passes activity check
-		const maximumTimePeriod = currentTime - clearingTime
+		const maximumTimePeriod = currentTime - clearingTime + 5
 		console.log('11 maximumTimePeriod',maximumTimePeriod)
 
 		if (requireWhitelisted && !whitelist) {
@@ -296,6 +304,16 @@ contract('DutchXPriceOracle', async (accounts) => {
 	}
 
 	// Helper fns
+
+	async function waitUntil(minimum) {
+		const ganacheTime = await getTime()
+		const larger = minimum > ganacheTime ? minimum : ganacheTime
+		await wait(larger - ganacheTime)
+	}
+
+	async function getTime() {
+		return (await web3.eth.getBlock('latest')).timestamp
+	}
 
 	async function getAuctionIndex() {
 		return (await dutchX.getAuctionIndex(tokenA, ethToken)).toNumber()
