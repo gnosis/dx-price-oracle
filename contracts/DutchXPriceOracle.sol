@@ -36,11 +36,17 @@ interface DutchX {
         returns (uint num, uint den);
 }
 
+/// @title A contract that uses the DutchX platform to provide a reliable price oracle for any token traded on the DutchX
+/// @author Dominik Teiml - dominik@gnosis.pm
+
 contract DutchXPriceOracle {
 
-    DutchX dutchX;
-    address ethToken;
+    DutchX public dutchX;
+    address public ethToken;
     
+    /// @notice constructor takes DutchX proxy address and WETH token address
+    /// @param _dutchX address of DutchX proxy
+    /// @param _ethToken address of WETH token
     constructor(DutchX _dutchX, address _ethToken)
         public
     {
@@ -48,6 +54,10 @@ contract DutchXPriceOracle {
         ethToken = _ethToken;
     }
 
+    /// @notice Get price, in ETH, of an ERC-20 token `token.address()`
+    /// @param token address of ERC-20 token in question
+    /// @return The numerator of the price of the token
+    /// @return The denominator of the price of the token
     function getPrice(address token)
         public
         view
@@ -56,7 +66,14 @@ contract DutchXPriceOracle {
         (num, den) = getPriceCustom(token, 0, true, 4.5 days, 9);
     }
 
-    /// @param maximumTimePeriod maximum time period between clearing time of last auction and time
+    /// @dev More fine-grained price oracle for token `token.address()`
+    /// @param token address of ERC-20 token in question
+    /// @param time 0 for current price, a Unix timestamp for a price at any point in time
+    /// @param requireWhitelisted Require the token be whitelisted on the DutchX? (Unwhitelisted addresses might not conform to the ERC-20 standard and/or might be malicious)
+    /// @param maximumTimePeriod maximum time period between clearing time of last auction and `time`
+    /// @param numberOfAuctions how many auctions to consider
+    /// @return The numerator of the price of the token
+    /// @return The denominator of the price of the token
     function getPriceCustom(
         address token,
         uint time,
@@ -82,18 +99,29 @@ contract DutchXPriceOracle {
             auctionIndex = latestAuctionIndex;
             time = now;
         } else {
+            // We need to add one at the end, because the way getPricesAndMedian works, it starts from 
+            // the previous auction (see below for why it does that)
             auctionIndex = computeAuctionIndex(token, 1, 
                 latestAuctionIndex - 1, latestAuctionIndex - 1, time) + 1;
         }
 
         // Activity check
-        if (dutchX.getClearingTime(token, ethTokenMem, auctionIndex - numberOfAuctions - 1) < time - maximumTimePeriod) {
-            return (0, 0);
-        }
+        uint clearingTime = dutchX.getClearingTime(token, ethTokenMem, auctionIndex - numberOfAuctions - 1);
 
-        (num, den) = getPricesAndMedian(token, numberOfAuctions, auctionIndex);
+        if (time - clearingTime > maximumTimePeriod) {
+            return (0, 0);
+        } else {
+            (num, den) = getPricesAndMedian(token, numberOfAuctions, auctionIndex);
+        }
     }
 
+    /// @notice gets prices, starting 
+    /// @dev search starts at auctionIndex - 1. The reason for this is we expect the most common use case to be the latest auction index and for that the clearingTime is not available yet. So we need to start at the one before
+    /// @param token address of ERC-20 token in question
+    /// @param numberOfAuctions how many auctions to consider
+    /// @param auctionIndex search will begin at auctionIndex - 1
+    /// @return The numerator of the price of the token
+    /// @return The denominator of the price of the token
     function getPricesAndMedian(
         address token,
         uint numberOfAuctions,
@@ -103,6 +131,12 @@ contract DutchXPriceOracle {
         view
         returns (uint, uint)
     {
+        // This function repeatedly calls dutchX.getPriceInPastAuction (which is a weighted average of the two closing prices for one auction pair) and saves them in nums[] and dens[]
+        // It keeps a linked list of indices of the sorted prices so that there is no array shifting
+        // Whenever a new price is added, we traverse the indices until we find a smaller price
+        // then we update the linked list in O(1)
+        // (It could be viewed as a linked list version of insertion sort)
+
         uint[] memory nums = new uint[](numberOfAuctions);
         uint[] memory dens = new uint[](numberOfAuctions);
         uint[] memory linkedListOfIndices = new uint[](numberOfAuctions);
@@ -127,6 +161,7 @@ contract DutchXPriceOracle {
                     linkedListOfIndices[i] = index;
 
                     if (j == 0) {
+                        // Loop is at first iteration
                         linkedListOfIndices[indexOfSmallest] = i;
                     } else {
                         // Update current term to point to new term
@@ -143,14 +178,18 @@ contract DutchXPriceOracle {
                     linkedListOfIndices[index] = i;
                     indexOfSmallest = i;
                 } else {
+                    // Nothing happened, update temp vars and run body again
                     previousIndex = index;
                     index = linkedListOfIndices[index];
                 }
             }
         }
 
+        // Array is fully sorted
+
         uint index = indexOfSmallest;
 
+        // Traverse array to find median
         for (uint i = 0; i < (numberOfAuctions + 1) / 2; i++) {
             index = linkedListOfIndices[index];
         }
@@ -160,6 +199,13 @@ contract DutchXPriceOracle {
         return (nums[index], dens[index]);
     }
 
+    /// @dev compute largest auctionIndex with clearing time smaller than desired time. Use case: user provides a time and this function will find the largest auctionIndex that had a cleared auction before that time. It is used to get historical price oracle values
+    /// @param token address of ERC-20 token in question
+    /// @param lowerBound lowerBound of result. Recommended that it is > 0, because 0th price is set by whoever adds token pair
+    /// @param initialUpperBound initial upper bound when this recursive fn is called for the first time
+    /// @param upperBound current upper bound of result
+    /// @param time desired time
+    /// @return largest auctionIndex s.t. clearingTime[auctionIndex] <= time
     function computeAuctionIndex(
         address token,
         uint lowerBound, 
@@ -199,6 +245,7 @@ contract DutchXPriceOracle {
                     return upperBound;
                 }            
             } else {
+                // In most cases, we'll have bounds [loweBound, loweBound + 1), which results in lowerBound
                 return lowerBound;
             }
         }
@@ -207,14 +254,23 @@ contract DutchXPriceOracle {
         clearingTime = dutchX.getClearingTime(token, ethToken, mid);
 
         if (time < clearingTime) {
+            // Answer is in lower half
             return computeAuctionIndex(token, lowerBound, initialUpperBound, mid, time);
         } else if (time == clearingTime) {
+            // We found answer
             return mid;
         } else {
+            // Answer is in upper half
             return computeAuctionIndex(token, mid, initialUpperBound, upperBound, time);
         }
     }
 
+    /// @notice compares two fractions and returns if first is smaller
+    /// @param num1 Numerator of first fraction
+    /// @param den1 Denominator of first fraction
+    /// @param num2 Numerator of second fraction
+    /// @param den2 Denominator of second fraction
+    /// @return bool - whether first fraction is (strictly) smaller than second
     function isSmaller(uint num1, uint den1, uint num2, uint den2)
         public
         pure
@@ -223,6 +279,9 @@ contract DutchXPriceOracle {
         return (num1 * den2 < num2 * den1);
     }
 
+    /// @notice determines whether token has been approved (whitelisted) on DutchX
+    /// @param token address of ERC-20 token in question
+    /// @return bool - whether token has been approved (whitelisted)
     function isWhitelisted(address token) 
         public
         view
