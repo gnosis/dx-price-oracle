@@ -4,9 +4,8 @@ const { wait } = require('@digix/tempo')(web3)
 // Make @digix/tempo work with web3 1.0.0
 web3.providers.HttpProvider.prototype.sendAsync = web3.providers.HttpProvider.prototype.send
 
-const { timestamp, assertRejects } = require('./utils')
-
-const { rand, generateDutchX, addToMock } = require('./auctions')
+const { logger, waitUntil, getTime, rand, assertRejects } = require('./utils')
+const { generateDutchX, addToMock } = require('./auctions')
 
 const DutchXPriceOracle = artifacts.require('DutchXPriceOracle')
 const DutchX = artifacts.require('DutchExchange')
@@ -50,18 +49,23 @@ contract('DutchXPriceOracle', async (accounts) => {
 	})
 
 	it('getPrice() correct', async () => {
-		console.log('0',)
 		addToMock(mock, approvedTokens, [tokenA], ['true'])
-		console.log('1',)
-		const medianSol = await getPrice(tokenA)
+		let medianSol = await getPrice()
+		logger('getPrice() success case medianSol',medianSol)
 
-		console.log('2 medianSol',medianSol)
 		const auctionIndex = await getAuctionIndex()
-		console.log('3 auctionIndex',auctionIndex)
-		const medianJS = await getPricesAndMedian(9, auctionIndex)
-		console.log('4 medianJS',medianJS)
+		logger('getPrice() success case auctionIndex', auctionIndex)
 
-		assert.equal(medianSol, medianJS, 'getPrice() not correct')
+		const medianJS = await getPricesAndMedianJS(9, auctionIndex)
+		logger('getPrice() success case medianJS', medianJS)
+
+		assert.equal(medianSol, medianJS, 'getPrice() success case not correct')
+
+		addToMock(mock, approvedTokens, [tokenA], [''])
+		medianSol = await getPrice()
+		logger('getPrice() failure case medianSol', medianSol)
+
+		assert.deepEqual(medianSol, [0, 0], 'getPrice() failure case not correct')
 	})
 
 	it('getPriceCustom() correct', async () => {
@@ -81,13 +85,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 			else whitelist = false
 
 			if (i % 16 <= 7) passesActivityCheck = false
-			else passesActivityCheck = true
-
-			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-			console.log('4', i, whitelist, time, 
-				requireWhitelisted, passesActivityCheck, latestAuctionIndex)
-			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-			
+			else passesActivityCheck = true			
 
 			await testGetPriceCustom(whitelist, time, requireWhitelisted,
 				passesActivityCheck, latestAuctionIndex)
@@ -96,10 +94,16 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 	it('getPricesAndMedian() correct', async () => {
 		const latestAuctionIndex = await getAuctionIndex()
+
+		// Test getPricesAndMedian a number of times
+		// E.g. for latestAuctionIndex = 50, we'll have
+		// 5 tests for numberOfAuctions = 2  with a random auctionIndex between 3 and 50
+		// 5 tests for numberOfAuctions = 8  with a random auctionIndex between 9 and 50
+		// 4 tests for numberOfAuctions = 14 with a random auctionIndex between 15 and 50 etc.
 		for (let i = 2; i < latestAuctionIndex + 1; i += 6) {
 			const numberOfTimes = Math.ceil((latestAuctionIndex - i) / 10)
 			for (let j = 0; j < numberOfTimes; j++) {
-				const auctionIndex = rand(i, latestAuctionIndex)
+				const auctionIndex = rand(i + 1, latestAuctionIndex)
 				await testGetPricesAndMedian(i, auctionIndex)
 			}
 		}
@@ -132,7 +136,6 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		// otherwise, should succeed
 		for (let i = 1; i < latestAuctionIndex; i +=3) {
-			// console.log('i, latestAuctionIndex',i,latestAuctionIndex)		
 			await testComputeAuctionIndex(i, latestAuctionIndex)
 		}		
 	})
@@ -144,11 +147,19 @@ contract('DutchXPriceOracle', async (accounts) => {
 		passesActivityCheck,
 		latestAuctionIndex
 	) {
+
+		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+		logger('testGetPriceCustom() called with:')
+		logger('whitelist: ',whitelist)
+		logger('time: ', time)
+		logger('requireWhitelisted: ', requireWhitelisted)
+		logger('passesActivityCheck: ', passesActivityCheck)
+		logger('latestAuctionIndex: ', latestAuctionIndex)
+		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
 		if (whitelist) {
-			console.log('5.1 whitelist',whitelist)
 			addToMock(mock, approvedTokens, [tokenA], ['true'])
 		} else {
-			console.log('5.2 whitelist',whitelist)
 			addToMock(mock, approvedTokens, [tokenA], [''])
 		}
 
@@ -157,24 +168,17 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		if (time == 0) {
 			auctionIndex = latestAuctionIndex
-			console.log('7.1 auctionIndex',auctionIndex)
-			// const lastClearingTime = await getClearingTime(auctionIndex - 1)
-			// console.log('7.2 lastClearingTime',lastClearingTime)
-			// const ganacheTime = await getTime()
-			// console.log('7.3 ganacheTime',ganacheTime)
 			currentTime = await getTime()
 		} else {
 			auctionIndex = await computeAuctionIndex(time, latestAuctionIndex) + 1
-			console.log('7.5 auctionIndex',auctionIndex)
 			currentTime = time
-			console.log('7.6 currentTime',currentTime)
 		}
 
+		logger('testGetPriceCustom auctionIndex', auctionIndex)
+		logger('testGetPriceCustom currentTime', currentTime)
+
 		const numberOfAuctions = rand(1, auctionIndex - 1)
-		console.log('7.7 numberOfAuctions',numberOfAuctions)
 		const clearingTime = await getClearingTime(auctionIndex - numberOfAuctions - 1)
-		console.log('7.3 clearingTime',clearingTime)
-		console.log('7.4 time',time)
 		
 		if (!passesActivityCheck) {
 			// Fails activity check
@@ -182,40 +186,23 @@ contract('DutchXPriceOracle', async (accounts) => {
 			// Actual time will be slightly larger than currentTime
 			// (since it will be next block's time)
 			const maximumTimePeriod = currentTime - clearingTime - 1
-
-			console.log('9 maximumTimePeriod',maximumTimePeriod)
-
 			const resultParsed = await getPriceCustom(time, false, maximumTimePeriod, numberOfAuctions)
-
 			assert.deepEqual(resultParsed, [0, 0], 'getPriceCustom() activity check fail not correct')
-
 			return
 		}
 
 		// Passes activity check
 		const maximumTimePeriod = currentTime - clearingTime + 5
-		console.log('11 maximumTimePeriod',maximumTimePeriod)
 
 		if (requireWhitelisted && !whitelist) {
 			// Failure case
-
-			console.log('6 requireWhitelisted',requireWhitelisted)
-
 			const resultParsed = await getPriceCustom(time, true, maximumTimePeriod, numberOfAuctions)
-
 			assert.deepEqual(resultParsed, [0, 0], 'getPriceCustom() unwhitelisted not correct')
-
 			return
 		}
 
 		const medianSol = await getPriceCustom(time, false, maximumTimePeriod, numberOfAuctions)
-
-		console.log('medianSol',medianSol)
-
-		const medianJS = await getPricesAndMedian(numberOfAuctions, auctionIndex)
-
-		console.log('13 medianJS',medianJS)
-
+		const medianJS = await getPricesAndMedianJS(numberOfAuctions, auctionIndex)
 		assert.equal(medianSol, medianJS, 'getPriceCustom() not correct')
 	}
 
@@ -224,12 +211,12 @@ contract('DutchXPriceOracle', async (accounts) => {
 		const price = (await priceOracle.getPricesAndMedian(tokenA, numberOfAuctions, auctionIndex))
 		const medianSol = price['0'].toNumber() / price['1'].toNumber()
 
-		const medianJS = await getPricesAndMedian(numberOfAuctions, auctionIndex)
+		const medianJS = await getPricesAndMedianJS(numberOfAuctions, auctionIndex)
 
 		assert.equal(medianSol, medianJS, 'getPricesAndMedian() not correct')
 	}
 
-	async function getPricesAndMedian(numberOfAuctions, auctionIndex) {
+	async function getPricesAndMedianJS(numberOfAuctions, auctionIndex) {
 		const pricesJS = []
 
 		for (let i = 0; i < numberOfAuctions; i++) {
@@ -238,8 +225,10 @@ contract('DutchXPriceOracle', async (accounts) => {
 		}
 
 		pricesJS.sort((a, b) => a - b)
+		const returnValue = pricesJS[Math.floor((pricesJS.length - 1) / 2)]
 
-		return pricesJS[Math.floor((pricesJS.length - 1) / 2)]
+		logger('getPricesAndMedianJS() returning', returnValue)
+		return returnValue
 	}
 
 	async function testIsWhitelisted(address, shouldBeWhitelisted) {
@@ -264,20 +253,22 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 	async function testComputeAuctionIndex(expectedAuctionIndex, latestAuctionIndex) {
 
-		// console.log('A expectedAuctionIndex, latestAuctionIndex',expectedAuctionIndex, latestAuctionIndex)
+		logger('testComputeAuctionIndex() called with:')
+		logger('expectedAuctionIndex: ', expectedAuctionIndex)
+		logger('latestAuctionIndex: ', latestAuctionIndex)
 
 		const clearingTime = await getClearingTime(1)
 		time = clearingTime + 30000 * (expectedAuctionIndex - 1)
 
-		// console.log('B clearingTime',clearingTime)
+		logger('testComputeAuctionIndex() clearingTime', clearingTime)
 
 		const auctionIndexSol = (await priceOracle.computeAuctionIndex(tokenA, 1, latestAuctionIndex - 1, latestAuctionIndex - 1, time)).toNumber()
 
-		// console.log('C auctionIndexSol',auctionIndexSol)
+		logger('testComputeAuctionIndex() auctionIndexSol', auctionIndexSol)
 
 		const auctionIndexJS = await computeAuctionIndex(time, latestAuctionIndex)
 
-		// console.log('D auctionIndexJS',auctionIndexJS)
+		logger('testComputeAuctionIndex() auctionIndexJS', auctionIndexJS)
 
 		assert.equal(auctionIndexSol, auctionIndexJS, 'computeAuctionIndex not correct')
 	}
@@ -305,16 +296,6 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 	// Helper fns
 
-	async function waitUntil(minimum) {
-		const ganacheTime = await getTime()
-		const larger = minimum > ganacheTime ? minimum : ganacheTime
-		await wait(larger - ganacheTime)
-	}
-
-	async function getTime() {
-		return (await web3.eth.getBlock('latest')).timestamp
-	}
-
 	async function getAuctionIndex() {
 		return (await dutchX.getAuctionIndex(tokenA, ethToken)).toNumber()
 	}
@@ -324,14 +305,25 @@ contract('DutchXPriceOracle', async (accounts) => {
 	}
 
 	async function getPrice() {
+		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+		logger('getPrice() called')
+		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 		const result = await priceOracle.getPrice(tokenA)
 		return parseResult(result)
 	}
 
 	async function getPriceCustom(time, requireWhitelisted, maximumTimePeriod, numberOfAuctions) {
+		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+		logger('getetPriceCustom() called with:')
+		logger('time: ', time)
+		logger('maximumTimePeriod: ', maximumTimePeriod)
+		logger('numberOfAuctions: ', numberOfAuctions)
+		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 		const result = await priceOracle.getPriceCustom(tokenA, time, requireWhitelisted,
 			maximumTimePeriod, numberOfAuctions)
 		return parseResult(result)
+
+		logger('getPriceCustom() returning', parseResult)
 	}
 
 	function parseResult(result) {

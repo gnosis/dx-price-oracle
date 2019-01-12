@@ -1,12 +1,11 @@
 const abi = require('ethereumjs-abi')
 
+const { rand } = require('./utils')
+
 // 21600 = 6 hours
 const WAITING_PERIOD_NEW_TOKEN_PAIR = 21600
 // 600 = 10 minutes
 WAITING_PERIOD_NEW_AUCTION = 600
-
-// 1/1/2019 in Unix time stamp
-const currentDate = Math.floor(new Date() / 1000)
 
 const getPriceInPastAuction = 'getPriceInPastAuction(address,address,uint256):(uint256,uint256)'
 const getClearingTime = 'getClearingTime(address,address,uint256):(uint256)'
@@ -20,12 +19,15 @@ async function generateDutchX(mock, tokenA, tokenB) {
     // hence latestAuctionIndex will be numberOfAuctions
     await addToMock(mock, getAuctionIndex, [tokenA, tokenB], [numberOfAuctions])
 
+    // 1/1/2019 in Unix time stamp
+    const currentDate = Math.floor(new Date() / 1000)
+
     // Generate auctions and print
     const auctions = generateAuctions(
         numberOfAuctions, [], currentDate, 100, 200, 10, 20, 10000, 50000)
     
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    console.log('auctions', auctions)
+    console.log(auctions)
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     
     // Add all auctions to mock
@@ -73,7 +75,7 @@ function generateAuctions(
     if (number === 0) {
         // Recursion base case
         return auctions
-    } else if (auctionIndex === 0) { 
+    } else if (auctionIndex === 0) {
         // First auction doesn't have auction start nor clearing time
         // (First price is saved from addTokenPair)
         auctions.push({
@@ -116,13 +118,7 @@ async function addToMock(mock, sig, inputs, outputs) {
     await mock.givenCalldataReturn(calldata, returndata)
 }
 
-function rand(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
 module.exports = {
-    currentDate,
-    rand,
     generateDutchX,
     addToMock,
 }

@@ -1,16 +1,23 @@
-// /*
-// eslint no-console:0,
-// no-confusing-arrow:0,
-// no-unused-expressions:0,
-// */
-// // `truffle test -s` to suppress logs
-// const {
-//     silent,
-// } = require('minimist')(process.argv.slice(2), { alias: { silent: 's' } })
+const { wait } = require('@digix/tempo')(web3)
+const {
+  log
+} = require('minimist')(process.argv.slice(2), { alias: { log: 'l' } })
 
-// const log = silent ? () => { } : console.log.bind(console)
+const logger = log ? console.log.bind(console) : () => { }
 
-const timestamp = async (block = 'latest') => await web3.eth.getBlock(block).timestamp
+async function waitUntil(minimum) {
+    const ganacheTime = await getTime()
+    const larger = minimum > ganacheTime ? minimum : ganacheTime
+    await wait(larger - ganacheTime)
+}
+
+async function getTime() {
+    return (await web3.eth.getBlock('latest')).timestamp
+}
+
+function rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
 
 const assertRejects = async (q, msg) => {
     let res, catchFlag = false
@@ -28,7 +35,9 @@ const assertRejects = async (q, msg) => {
 }
 
 module.exports = {
-    timestamp,
+    logger,
+    waitUntil,
+    getTime,
+    rand,
     assertRejects,
-    // log,
 }
