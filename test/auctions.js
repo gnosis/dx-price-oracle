@@ -11,7 +11,7 @@ const getPriceInPastAuction = 'getPriceInPastAuction(address,address,uint256):(u
 const getClearingTime = 'getClearingTime(address,address,uint256):(uint256)'
 const getAuctionIndex = 'getAuctionIndex(address,address):(uint256)'
 
-const numberOfAuctions = 200
+const numberOfAuctions = 50
 
 async function generateDutchX(mock, tokenA, tokenB) {
 
