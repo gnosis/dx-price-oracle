@@ -1,40 +1,6 @@
 pragma solidity ^0.5.0;
 
-interface DutchX {
-    // TODO
-
-    function approvedTokens(address)
-        external
-        view
-        returns (bool);
-
-    function getAuctionIndex(
-        address token1,
-        address token2
-    )
-        external
-        view
-        returns (uint auctionIndex);
-
-    function getClearingTime(
-        address token1,
-        address token2,
-        uint auctionIndex
-    )
-        external
-        view
-        returns (uint time);
-
-    function getPriceInPastAuction(
-        address token1,
-        address token2,
-        uint auctionIndex
-    )
-        external
-        view
-        // price < 10^31
-        returns (uint num, uint den);
-}
+import "./IDutchX.sol";
 
 /// @title A contract that uses the DutchX platform to provide a reliable price oracle for any token traded on the DutchX
 /// @author Dominik Teiml - dominik@gnosis.pm
