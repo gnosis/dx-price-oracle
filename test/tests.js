@@ -135,7 +135,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 			latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime + 20000))
 
 		// otherwise, should succeed
-		for (let i = 1; i < latestAuctionIndex; i +=3) {
+		for (let i = 1; i < latestAuctionIndex; i += 5) {
 			await testComputeAuctionIndex(i, latestAuctionIndex)
 		}		
 	})

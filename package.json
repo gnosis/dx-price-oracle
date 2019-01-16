@@ -13,10 +13,11 @@
     "@digix/tempo": "^0.2.0",
     "@gnosis.pm/mock-contract": "^3.0.6",
     "ethereumjs-abi": "^0.6.5",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "solidity-coverage": "^0.5.11"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx truffle test"
   },
   "repository": {
     "type": "git",
