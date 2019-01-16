@@ -1,0 +1,16 @@
+#.travis.yml
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+  - '8'
+before_install:
+  - rm -rf node_modules
+  - npm install -g ganache-cli@6.2.5
+install:
+  - npm install
+before_script:
+  - ganache-cli
+  - sleep 5
+script:
+  - npm test
