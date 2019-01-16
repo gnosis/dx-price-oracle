@@ -10,7 +10,7 @@ before_install:
 install:
   - npm install
 before_script:
-  - ganache-cli
+  - ganache-cli > /dev/null &
   - sleep 5
 script:
   - npm test
