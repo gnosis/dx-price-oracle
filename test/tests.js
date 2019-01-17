@@ -49,7 +49,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 	})
 
 	it('getPrice() correct', async () => {
-		addToMock(mock, approvedTokens, [tokenA], ['true'])
+		await addToMock(mock, approvedTokens, [tokenA], ['true'])
 		let medianSol = await getPrice()
 		logger('getPrice() success case medianSol',medianSol)
 
@@ -61,7 +61,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		assert.equal(medianSol, medianJS, 'getPrice() success case not correct')
 
-		addToMock(mock, approvedTokens, [tokenA], [''])
+		await addToMock(mock, approvedTokens, [tokenA], [''])
 		medianSol = await getPrice()
 		logger('getPrice() failure case medianSol', medianSol)
 
@@ -158,9 +158,9 @@ contract('DutchXPriceOracle', async (accounts) => {
 		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
 		if (whitelist) {
-			addToMock(mock, approvedTokens, [tokenA], ['true'])
+			await addToMock(mock, approvedTokens, [tokenA], ['true'])
 		} else {
-			addToMock(mock, approvedTokens, [tokenA], [''])
+			await addToMock(mock, approvedTokens, [tokenA], [''])
 		}
 
 		let auctionIndex
