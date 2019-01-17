@@ -5,7 +5,7 @@ const { logger, rand } = require('./utils')
 // 21600 = 6 hours
 const WAITING_PERIOD_NEW_TOKEN_PAIR = 21600
 // 600 = 10 minutes
-WAITING_PERIOD_NEW_AUCTION = 600
+const WAITING_PERIOD_NEW_AUCTION = 600
 
 const getPriceInPastAuction = 'getPriceInPastAuction(address,address,uint256):(uint256,uint256)'
 const getClearingTime = 'getClearingTime(address,address,uint256):(uint256)'
@@ -13,18 +13,15 @@ const getAuctionIndex = 'getAuctionIndex(address,address):(uint256)'
 
 const numberOfAuctions = 50
 
-async function generateDutchX(mock, tokenA, tokenB) {
+async function generateDutchX(currentTime, mock, tokenA, tokenB) {
 
     // last closed auction has index numberOfAuctions - 1
     // hence latestAuctionIndex will be numberOfAuctions
     await addToMock(mock, getAuctionIndex, [tokenA, tokenB], [numberOfAuctions])
 
-    // 1/1/2019 in Unix time stamp
-    const currentDate = Math.floor(new Date() / 1000)
-
     // Generate auctions and print
     const auctions = generateAuctions(
-        numberOfAuctions, [], currentDate, 1e6, 1e12, 1e6, 1e12, 10000, 50000)
+        numberOfAuctions, [], currentTime, 1e6, 1e12, 1e6, 1e12, 10000, 50000)
     
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     console.log(auctions)

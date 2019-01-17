@@ -97,7 +97,9 @@ contract DutchXPriceOracle {
         view
         returns (uint, uint)
     {
-        // This function repeatedly calls dutchX.getPriceInPastAuction (which is a weighted average of the two closing prices for one auction pair) and saves them in nums[] and dens[]
+        // This function repeatedly calls dutchX.getPriceInPastAuction
+        // (which is a weighted average of the two closing prices for one auction pair)
+        // and saves them in nums[] and dens[]
         // It keeps a linked list of indices of the sorted prices so that there is no array shifting
         // Whenever a new price is added, we traverse the indices until we find a smaller price
         // then we update the linked list in O(1)
