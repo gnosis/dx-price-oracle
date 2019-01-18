@@ -15204,10 +15204,16 @@
       "links": {},
       "address": "0x61deaBABEdD87d5d82ae887093832a979745927c",
       "transactionHash": "0xf28973d336afaead1859abc57088306efe34f0b4cd27b337a2930df23dbeb19c"
+    },
+    "1547824667234": {
+      "events": {},
+      "links": {},
+      "address": "0x677Fe78CD5c54B39dA492b886F98C5507DEC9DF6",
+      "transactionHash": "0x34780ecd008cf27c0eb6e9cce14fa7254e0edd3c8a4ca668c6438d3e9e100642"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-18T14:47:10.900Z",
+  "updatedAt": "2019-01-18T15:30:16.047Z",
   "devdoc": {
     "author": "Dominik Teiml - dominik@gnosis.pm",
     "methods": {
