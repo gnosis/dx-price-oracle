@@ -116,6 +116,15 @@ contract('DutchXPriceOracle', async (accounts) => {
 	})
 
 	it('isSmaller() correct', async () => {
+		// Test undefined fractions
+		assertRejects(testIsSmaller([1,0,5,3]))
+		assertRejects(testIsSmaller([5,3,4,0]))
+
+		// Test overflow
+		const largeUint = BigInt(1e60)
+		assertRejects(testIsSmaller([largeUint, 3, 5, largeUint]))
+		assertRejects(testIsSmaller([5, largeUint, largeUint, 3]))
+
 		const fractions = [[1, 5, 0, 5], [1, 5, 1, 5], [1, 5, 2, 5], [9, 5, 10, 5]]
 		for (let i = 0; i < fractions.length; i++) {
 			await testIsSmaller(fractions[i])
