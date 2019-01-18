@@ -134,10 +134,27 @@ contract('DutchXPriceOracle', async (accounts) => {
 		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
 			latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime + 20000))
 
+		const secondTime = await getClearingTime(1)
+		
 		// otherwise, should succeed
-		for (let i = 1; i < latestAuctionIndex; i += 20) {
-			await testComputeAuctionIndex(i, latestAuctionIndex)
-		}		
+			for (let i = 1; i < latestAuctionIndex; i += 20) {
+			// i represents expected auction index
+			time = secondTime + 30000 * (i - 1)
+			await testComputeAuctionIndex(time, latestAuctionIndex)
+		}
+
+		// Test three more cases:
+		// 1. When time = one of the clearing time
+		const randomTime = await getClearingTime(rand(1,latestAuctionIndex - 1))
+		await testComputeAuctionIndex(randomTime, latestAuctionIndex)
+
+		// 2. When time > last clearing time
+		const lastTime = await getClearingTime(latestAuctionIndex - 1)
+		await testComputeAuctionIndex(lastTime + 1000, latestAuctionIndex)
+
+		// 3. When time is between penultimate and last clearing time
+		const penultimateTime = await getClearingTime(latestAuctionIndex - 2)
+		await(testComputeAuctionIndex(rand(penultimateTime + 1, lastTime - 1), latestAuctionIndex))
 	})
 
 	async function testGetPriceCustom(
@@ -259,16 +276,11 @@ contract('DutchXPriceOracle', async (accounts) => {
 		assert.equal(isSmallerSol, isSmallerJS, 'isSmaller() not correct')
 	}
 
-	async function testComputeAuctionIndex(expectedAuctionIndex, latestAuctionIndex) {
+	async function testComputeAuctionIndex(time, latestAuctionIndex) {
 
 		logger('testComputeAuctionIndex() called with:')
-		logger('\texpectedAuctionIndex: ', expectedAuctionIndex)
+		logger('\ttime', time)
 		logger('\tlatestAuctionIndex: ', latestAuctionIndex)
-
-		const clearingTime = await getClearingTime(1)
-		time = clearingTime + 30000 * (expectedAuctionIndex - 1)
-
-		logger('\ttestComputeAuctionIndex() clearingTime', clearingTime)
 
 		const auctionIndexSol = (await priceOracle.computeAuctionIndex(tokenA, 1, latestAuctionIndex - 1, latestAuctionIndex - 1, time)).toNumber()
 
