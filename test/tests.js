@@ -68,29 +68,29 @@ contract('DutchXPriceOracle', async (accounts) => {
 		assert.deepEqual(medianSol, [0, 0], 'getPrice() failure case not correct')
 	})
 
-	// it('getPriceCustom() correct', async () => {
-	// 	const latestAuctionIndex = await getAuctionIndex()
-	// 	const secondClearingTime = await getClearingTime(2)
-	// 	const lastClearingTime = await getClearingTime(latestAuctionIndex - 1)
+	it('getPriceCustom() correct', async () => {
+		const latestAuctionIndex = await getAuctionIndex()
+		const secondClearingTime = await getClearingTime(2)
+		const lastClearingTime = await getClearingTime(latestAuctionIndex - 1)
 
-	// 	let time, requireWhitelisted, whitelist, passesActivityCheck
-	// 	for (let i = 0; i < 16; i++) {
-	// 		if (i % 2 <= 0) time = 0
-	// 		else time = rand(secondClearingTime, lastClearingTime)
+		let time, requireWhitelisted, whitelist, passesActivityCheck
+		for (let i = 0; i < 16; i++) {
+			if (i % 2 <= 0) time = 0
+			else time = rand(secondClearingTime, lastClearingTime)
 
-	// 		if (i % 4 <= 1) requireWhitelisted = true
-	// 		else requireWhitelisted = false
+			if (i % 4 <= 1) requireWhitelisted = true
+			else requireWhitelisted = false
 
-	// 		if (i % 8 <= 3) whitelist = true
-	// 		else whitelist = false
+			if (i % 8 <= 3) whitelist = true
+			else whitelist = false
 
-	// 		if (i % 16 <= 7) passesActivityCheck = false
-	// 		else passesActivityCheck = true			
+			if (i % 16 <= 7) passesActivityCheck = false
+			else passesActivityCheck = true			
 
-	// 		await testGetPriceCustom(whitelist, time, requireWhitelisted,
-	// 			passesActivityCheck, latestAuctionIndex)
-	// 	}
-	// })
+			await testGetPriceCustom(whitelist, time, requireWhitelisted,
+				passesActivityCheck, latestAuctionIndex)
+		}
+	})
 
 	it('getPricesAndMedian() correct', async () => {
 		const latestAuctionIndex = await getAuctionIndex()
@@ -100,7 +100,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 		// 5 tests for numberOfAuctions = 2  with a random auctionIndex between 3 and 50
 		// 5 tests for numberOfAuctions = 8  with a random auctionIndex between 9 and 50
 		// 4 tests for numberOfAuctions = 14 with a random auctionIndex between 15 and 50 etc.
-		for (let i = 2; i < latestAuctionIndex + 1; i += 10) {
+		for (let i = 2; i < latestAuctionIndex + 1; i += 6) {
 			const numberOfTimes = Math.ceil((latestAuctionIndex - i) / 10)
 			for (let j = 0; j < numberOfTimes; j++) {
 				const auctionIndex = rand(i + 1, latestAuctionIndex)
@@ -122,23 +122,23 @@ contract('DutchXPriceOracle', async (accounts) => {
 		}
 	})
 		
-	// it('computeAuctionIndex() correct', async () => {
-	// 	const latestAuctionIndex = await getAuctionIndex()
+	it('computeAuctionIndex() correct', async () => {
+		const latestAuctionIndex = await getAuctionIndex()
 
-	// 	const firstTime = await getClearingTime(0)
+		const firstTime = await getClearingTime(0)
 
-	// 	// should revert if time < clearingTime[0]
-	// 	assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
-	// 		latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime - 20000))
-	// 	// should revert if clearingTime[0] < time < clearingTime[1]
-	// 	assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
-	// 		latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime + 20000))
+		// should revert if time < clearingTime[0]
+		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
+			latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime - 20000))
+		// should revert if clearingTime[0] < time < clearingTime[1]
+		assertRejects(priceOracle.computeAuctionIndex(tokenA, 1, 
+			latestAuctionIndex - 1, latestAuctionIndex - 1, firstTime + 20000))
 
-	// 	// otherwise, should succeed
-	// 	for (let i = 1; i < latestAuctionIndex; i += 20) {
-	// 		await testComputeAuctionIndex(i, latestAuctionIndex)
-	// 	}		
-	// })
+		// otherwise, should succeed
+		for (let i = 1; i < latestAuctionIndex; i += 20) {
+			await testComputeAuctionIndex(i, latestAuctionIndex)
+		}		
+	})
 
 	async function testGetPriceCustom(
 		whitelist,
@@ -208,19 +208,18 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 	async function testGetPricesAndMedian(numberOfAuctions, auctionIndex) {
 
-		console.log('testGetPricesAndMedian numberOfAuctions, auctionIndex', numberOfAuctions, auctionIndex)
+		logger('testGetPricesAndMedian numberOfAuctions, auctionIndex', numberOfAuctions, auctionIndex)
 		
 		const tx = await priceOracle.getPricesAndMedian.sendTransaction(tokenA, numberOfAuctions, auctionIndex)
-		console.log('\ttx.receipt.gasUsed', tx.receipt.gasUsed)
+		logger('\ttx.receipt.gasUsed', tx.receipt.gasUsed)
 
 		const price = await priceOracle.getPricesAndMedian(tokenA, numberOfAuctions, auctionIndex)
 
 		const medianSol = price['0'].toNumber() / price['1'].toNumber()
-		console.log('\ttestGetPricesAndMedian medianSol', medianSol)
+		logger('\ttestGetPricesAndMedian medianSol', medianSol)
 
 		const medianJS = await getPricesAndMedianJS(numberOfAuctions, auctionIndex)
-
-		console.log('\ttestGetPricesAndMedian medianJS', medianJS)
+		logger('\ttestGetPricesAndMedian medianJS', medianJS)
 
 		assert.equal(medianSol, medianJS, 'getPricesAndMedian() not correct')
 	}
@@ -318,7 +317,7 @@ contract('DutchXPriceOracle', async (accounts) => {
 		logger('getPrice() called')
 		logger('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 		const tx = await priceOracle.getPrice.sendTransaction(tokenA)
-		console.log('tx.receipt.gasUsed', tx.receipt.gasUsed)
+		logger('\tgetPrice() gasUsed', tx.receipt.gasUsed)
 		const result = await priceOracle.getPrice(tokenA)
 		return parseResult(result)
 	}
