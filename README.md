@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gnosis/dx-prce-oracle.svg?branch=master)](https://travis-ci.org/gnosis/dx-prce-oracle)
+[![Build Status](https://travis-ci.org/gnosis/dx-price-oracle.svg?branch=master)](https://travis-ci.org/gnosis/dx-price-oracle)
 
 # DutchX Price Oracle
 
