@@ -1,0 +1,147 @@
+{
+  "contractName": "Imports",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058208369e42f8de22f03a154d2076d15712628c10b60198e26ff15d1d9207bdc9e610029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a723058208369e42f8de22f03a154d2076d15712628c10b60198e26ff15d1d9207bdc9e610029",
+  "sourceMap": "273:19:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;273:19:2;;;;;;;",
+  "deployedSourceMap": "273:19:2:-;;;;;",
+  "source": "pragma solidity ^0.5.0;\n\n// We import the contract so truffle compiles it, and we have the ABI \n// available when working from truffle console.\nimport \"@gnosis.pm/mock-contract/contracts/MockContract.sol\";\nimport \"@gnosis.pm/dx-contracts/contracts/DxDevDependencies.sol\";\n\ncontract Imports {}",
+  "sourcePath": "/Users/dteiml/bc/dx-price-oracle/contracts/Imports.sol",
+  "ast": {
+    "absolutePath": "/Users/dteiml/bc/dx-price-oracle/contracts/Imports.sol",
+    "exportedSymbols": {
+      "Imports": [
+        613
+      ]
+    },
+    "id": 614,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 610,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:2"
+      },
+      {
+        "absolutePath": "@gnosis.pm/mock-contract/contracts/MockContract.sol",
+        "file": "@gnosis.pm/mock-contract/contracts/MockContract.sol",
+        "id": 611,
+        "nodeType": "ImportDirective",
+        "scope": 614,
+        "sourceUnit": 8154,
+        "src": "144:61:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "@gnosis.pm/dx-contracts/contracts/DxDevDependencies.sol",
+        "file": "@gnosis.pm/dx-contracts/contracts/DxDevDependencies.sol",
+        "id": 612,
+        "nodeType": "ImportDirective",
+        "scope": 614,
+        "sourceUnit": 4514,
+        "src": "206:65:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 613,
+        "linearizedBaseContracts": [
+          613
+        ],
+        "name": "Imports",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 614,
+        "src": "273:19:2"
+      }
+    ],
+    "src": "0:292:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/dteiml/bc/dx-price-oracle/contracts/Imports.sol",
+    "exportedSymbols": {
+      "Imports": [
+        613
+      ]
+    },
+    "id": 614,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 610,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:2"
+      },
+      {
+        "absolutePath": "@gnosis.pm/mock-contract/contracts/MockContract.sol",
+        "file": "@gnosis.pm/mock-contract/contracts/MockContract.sol",
+        "id": 611,
+        "nodeType": "ImportDirective",
+        "scope": 614,
+        "sourceUnit": 8154,
+        "src": "144:61:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "@gnosis.pm/dx-contracts/contracts/DxDevDependencies.sol",
+        "file": "@gnosis.pm/dx-contracts/contracts/DxDevDependencies.sol",
+        "id": 612,
+        "nodeType": "ImportDirective",
+        "scope": 614,
+        "sourceUnit": 4514,
+        "src": "206:65:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 613,
+        "linearizedBaseContracts": [
+          613
+        ],
+        "name": "Imports",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 614,
+        "src": "273:19:2"
+      }
+    ],
+    "src": "0:292:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.2+commit.1df8f40c.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.1",
+  "updatedAt": "2019-01-18T12:36:19.330Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "@gnosis.pm/dx-price-oracle",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A reliable price oracle based on the DutchX protocol",
   "main": "truffle-config.js",
   "directories": {
