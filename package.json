@@ -1,5 +1,5 @@
 {
-  "name": "dx-price-oracle",
+  "name": "@gnosis.pm/dx-price-oracle",
   "version": "0.1.0",
   "description": "A reliable price oracle based on the DutchX protocol",
   "main": "truffle-config.js",
