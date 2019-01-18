@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gnosis/dx-prce-oracle.svg?branch=master)](https://travis-ci.org/gnosis/dx-prce-oracle)
+
 # DutchX Price Oracle
 
 Contract to get reliable price oracle from DutchX protocol.
