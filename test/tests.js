@@ -48,83 +48,84 @@ contract('DutchXPriceOracle', async (accounts) => {
 		await waitUntil(clearingTime + 100)
 	})
 
-	it('getPrice() correct', async () => {
-		await addToMock(mock, approvedTokens, [tokenA], ['true'])
-		let medianSol = await getPrice()
-		logger('getPrice() success case medianSol',medianSol)
+	// it('getPrice() correct', async () => {
+	// 	await addToMock(mock, approvedTokens, [tokenA], ['true'])
+	// 	let medianSol = await getPrice()
+	// 	logger('getPrice() success case medianSol',medianSol)
 
-		const auctionIndex = await getAuctionIndex()
-		logger('getPrice() success case auctionIndex', auctionIndex)
+	// 	const auctionIndex = await getAuctionIndex()
+	// 	logger('getPrice() success case auctionIndex', auctionIndex)
 
-		const medianJS = await getPricesAndMedianJS(9, auctionIndex)
-		logger('getPrice() success case medianJS', medianJS)
+	// 	const medianJS = await getPricesAndMedianJS(9, auctionIndex)
+	// 	logger('getPrice() success case medianJS', medianJS)
 
-		assert.equal(medianSol, medianJS, 'getPrice() success case not correct')
+	// 	assert.equal(medianSol, medianJS, 'getPrice() success case not correct')
 
-		await addToMock(mock, approvedTokens, [tokenA], [''])
-		medianSol = await getPrice()
-		logger('getPrice() failure case medianSol', medianSol)
+	// 	await addToMock(mock, approvedTokens, [tokenA], [''])
+	// 	medianSol = await getPrice()
+	// 	logger('getPrice() failure case medianSol', medianSol)
 
-		assert.deepEqual(medianSol, [0, 0], 'getPrice() failure case not correct')
-	})
+	// 	assert.deepEqual(medianSol, [0, 0], 'getPrice() failure case not correct')
+	// })
 
-	it('getPriceCustom() correct', async () => {
-		const latestAuctionIndex = await getAuctionIndex()
-		const secondClearingTime = await getClearingTime(2)
-		const lastClearingTime = await getClearingTime(latestAuctionIndex - 1)
+	// it('getPriceCustom() correct', async () => {
+	// 	const latestAuctionIndex = await getAuctionIndex()
+	// 	const secondClearingTime = await getClearingTime(2)
+	// 	const lastClearingTime = await getClearingTime(latestAuctionIndex - 1)
 
-		let time, requireWhitelisted, whitelist, passesActivityCheck
-		for (let i = 0; i < 16; i++) {
-			if (i % 2 <= 0) time = 0
-			else time = rand(secondClearingTime, lastClearingTime)
+	// 	let time, requireWhitelisted, whitelist, passesActivityCheck
+	// 	for (let i = 0; i < 16; i++) {
+	// 		if (i % 2 <= 0) time = 0
+	// 		else time = rand(secondClearingTime, lastClearingTime)
 
-			if (i % 4 <= 1) requireWhitelisted = true
-			else requireWhitelisted = false
+	// 		if (i % 4 <= 1) requireWhitelisted = true
+	// 		else requireWhitelisted = false
 
-			if (i % 8 <= 3) whitelist = true
-			else whitelist = false
+	// 		if (i % 8 <= 3) whitelist = true
+	// 		else whitelist = false
 
-			if (i % 16 <= 7) passesActivityCheck = false
-			else passesActivityCheck = true			
+	// 		if (i % 16 <= 7) passesActivityCheck = false
+	// 		else passesActivityCheck = true			
 
-			await testGetPriceCustom(whitelist, time, requireWhitelisted,
-				passesActivityCheck, latestAuctionIndex)
-		}
-	})
+	// 		await testGetPriceCustom(whitelist, time, requireWhitelisted,
+	// 			passesActivityCheck, latestAuctionIndex)
+	// 	}
+	// })
 
-	it('getPricesAndMedian() correct', async () => {
-		const latestAuctionIndex = await getAuctionIndex()
+	// it('getPricesAndMedian() correct', async () => {
+	// 	const latestAuctionIndex = await getAuctionIndex()
 
-		// Test getPricesAndMedian a number of times
-		// E.g. for latestAuctionIndex = 50, we'll have
-		// 5 tests for numberOfAuctions = 2  with a random auctionIndex between 3 and 50
-		// 5 tests for numberOfAuctions = 8  with a random auctionIndex between 9 and 50
-		// 4 tests for numberOfAuctions = 14 with a random auctionIndex between 15 and 50 etc.
-		for (let i = 2; i < latestAuctionIndex + 1; i += 6) {
-			const numberOfTimes = Math.ceil((latestAuctionIndex - i) / 10)
-			for (let j = 0; j < numberOfTimes; j++) {
-				const auctionIndex = rand(i + 1, latestAuctionIndex)
-				await testGetPricesAndMedian(i, auctionIndex)
-			}
-		}
-	})
+	// 	// Test getPricesAndMedian a number of times
+	// 	// E.g. for latestAuctionIndex = 50, we'll have
+	// 	// 5 tests for numberOfAuctions = 2  with a random auctionIndex between 3 and 50
+	// 	// 5 tests for numberOfAuctions = 8  with a random auctionIndex between 9 and 50
+	// 	// 4 tests for numberOfAuctions = 14 with a random auctionIndex between 15 and 50 etc.
+	// 	for (let i = 2; i < latestAuctionIndex + 1; i += 6) {
+	// 		const numberOfTimes = Math.ceil((latestAuctionIndex - i) / 10)
+	// 		for (let j = 0; j < numberOfTimes; j++) {
+	// 			const auctionIndex = rand(i + 1, latestAuctionIndex)
+	// 			await testGetPricesAndMedian(i, auctionIndex)
+	// 		}
+	// 	}
+	// })
 
-	it('isWhitelisted() correct', async () => {
-		await testIsWhitelisted(address3, false)
-		await testIsWhitelisted(address4, true)
-		await testIsWhitelisted(address5, true)
-	})
+	// it('isWhitelisted() correct', async () => {
+	// 	await testIsWhitelisted(address3, false)
+	// 	await testIsWhitelisted(address4, true)
+	// 	await testIsWhitelisted(address5, true)
+	// })
 
 	it('isSmaller() correct', async () => {
 		// Test undefined fractions
-		assertRejects(testIsSmaller([1,0,5,3]))
-		assertRejects(testIsSmaller([5,3,4,0]))
-
+		assertRejects(priceOracle.isSmaller(1,0,5,3))
+		assertRejects(priceOracle.isSmaller(5,3,4,0))
+		
 		// Test overflow
-		const largeUint = BigInt(1e60)
-		assertRejects(testIsSmaller([largeUint, 3, 5, largeUint]))
-		assertRejects(testIsSmaller([5, largeUint, largeUint, 3]))
+		const largeUint = BigInt(1e60).toString()
+		assertRejects(priceOracle.isSmaller(largeUint, 3, 5, largeUint))
+		assertRejects(priceOracle.isSmaller(5, largeUint, largeUint, 3))
 
+		// Test success cases
 		const fractions = [[1, 5, 0, 5], [1, 5, 1, 5], [1, 5, 2, 5], [9, 5, 10, 5]]
 		for (let i = 0; i < fractions.length; i++) {
 			await testIsSmaller(fractions[i])

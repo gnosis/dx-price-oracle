@@ -15,13 +15,15 @@
     "@gnosis.pm/dx-contracts": "^2.0.0-RC12",
     "@gnosis.pm/mock-contract": "^3.0.6",
     "@gnosis.pm/util-contracts": "^1.2.0-RC5-davidPR14",
+    "coveralls": "^3.0.2",
     "dotenv": "^6.2.0",
     "ethereumjs-abi": "^0.6.5",
     "minimist": "^1.2.0",
     "solidity-coverage": "^0.5.11"
   },
   "scripts": {
-    "test": "npx truffle test"
+    "test": "npx truffle test",
+    "coverage": "./node_modules/.bin/solidity-coverage"
   },
   "repository": {
     "type": "git",
