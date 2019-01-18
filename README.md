@@ -2,9 +2,9 @@
 
 Contract to get reliable price oracle from DutchX protocol.
 
-Currently, uses a mock-interface (in `./contracts/DutchXPriceOracle.sol`) of the DutchX in order for Solidity to be happy.
+Currently, uses a mock-interface (in `./contracts/IDutchX.sol`) of the DutchX in order for Solidity to be happy.
 
-But it uses the actual abi for the tests. The entire build folder of the DutchX project was imported.
+But it uses the actual abi for the tests. This is imported in `./contracts/Imports.sol`.
 
 ## Tests
 
