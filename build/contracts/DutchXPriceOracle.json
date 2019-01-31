@@ -15202,18 +15202,12 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x61deaBABEdD87d5d82ae887093832a979745927c",
-      "transactionHash": "0xf28973d336afaead1859abc57088306efe34f0b4cd27b337a2930df23dbeb19c"
-    },
-    "1547824667234": {
-      "events": {},
-      "links": {},
-      "address": "0x677Fe78CD5c54B39dA492b886F98C5507DEC9DF6",
-      "transactionHash": "0x34780ecd008cf27c0eb6e9cce14fa7254e0edd3c8a4ca668c6438d3e9e100642"
+      "address": "0xC537bCD4C5B4Fd9b6811Ce5a5f0997eF6a11e465",
+      "transactionHash": "0x1d2d7278f208d9ee980de3348eb8f0c353995c1df791bea0ebbbd0af5bf4dedf"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-18T15:30:16.047Z",
+  "updatedAt": "2019-01-28T10:54:43.858Z",
   "devdoc": {
     "author": "Dominik Teiml - dominik@gnosis.pm",
     "methods": {

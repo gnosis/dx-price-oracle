@@ -3,9 +3,12 @@ const DutchX = artifacts.require('DutchExchange')
 
 module.exports = async function (deployer, network, accounts) {
     if (network !== 'development') {
-        dutchXAddress = await _getDutchXAddressFromNpmPackage()
+        // Either get address from npm package or hardcore an address:
+        // dutchXAddress = await _getDutchXAddressFromNpmPackage()
+        dutchXAddress = '0x25b8c27508a59bf498646d8819dc349876789f83'
         const dutchX = await DutchX.at(dutchXAddress)
         const ethTokenAddress = await dutchX.ethToken.call()
+        console.log('ethTokenAddress', ethTokenAddress)
         await deployer.deploy(PriceOracle, dutchXAddress, ethTokenAddress)
     }
 }

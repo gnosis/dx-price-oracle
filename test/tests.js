@@ -237,9 +237,6 @@ contract('DutchXPriceOracle', async (accounts) => {
 
 		logger('testGetPricesAndMedian numberOfAuctions, auctionIndex', numberOfAuctions, auctionIndex)
 		
-		const tx = await priceOracle.getPricesAndMedian.sendTransaction(tokenA, numberOfAuctions, auctionIndex)
-		logger('\ttx.receipt.gasUsed', tx.receipt.gasUsed)
-
 		const price = await priceOracle.getPricesAndMedian(tokenA, numberOfAuctions, auctionIndex)
 
 		const medianSol = price['0'].toNumber() / price['1'].toNumber()
