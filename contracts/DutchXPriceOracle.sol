@@ -162,8 +162,14 @@ contract DutchXPriceOracle {
             index = linkedListOfIndices[index];
         }
 
-        // We return floor-of-half value, because if we computed arithmetic average
-        // between two middle values, the order of the numbers would increase
+        // We return floor-of-half value 
+        // The reason is if we computed arithmetic average of the two middle values
+        // as a traditional median does, that would increase the order of the numbers
+        // DutchX price oracle gives a fraction with num & den at an order of 10^30
+        // If instead of a/b we do (a/b + c/d)/2 = (ad+bc)/(2bd), we see the order
+        // would become 10^60. That would increase chance of overflow in contracts 
+        // that depend on this price oracle
+
         return (nums[index], dens[index]);
     }
 
