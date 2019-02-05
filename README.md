@@ -51,6 +51,15 @@ git push && git push --tags
 npm publish --access=public
 ```
 
+## Validate the contract
+```bash
+# Flatten contract
+npx truffle-flattener contracts/DutchXPriceOracle.sol > build/DutchXPriceOracle-EtherScan.sol
+```
+
+Validate the contract:
+* [https://etherscan.io/verifyContract2](https://etherscan.io/verifyContract2)
+
 ## Tests
 
 Tests use a [mock contract](https://github.com/gnosis/mock-contract) to imitate the behavior of the DutchX. We generate 50 auctions with random prices and clearing times, and then test each contract fn on that model.
