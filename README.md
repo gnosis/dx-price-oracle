@@ -39,6 +39,18 @@ PK=<private_key> yarn migrate --network rinkeby
 PK=<private_key> yarn migrate --network mainnet
 ```
 
+## Create a new version
+```bash
+# Generate version and tag it
+npm version <new-version-number>
+
+# Publish version into git
+git push && git push --tags
+
+# Publish version into npm
+npm publish --access=public
+```
+
 ## Tests
 
 Tests use a [mock contract](https://github.com/gnosis/mock-contract) to imitate the behavior of the DutchX. We generate 50 auctions with random prices and clearing times, and then test each contract fn on that model.
