@@ -12,10 +12,10 @@
   },
   "devDependencies": {
     "@digix/tempo": "^0.2.0",
-    "@gnosis.pm/dx-contracts": "^2.0.0-RC12",
+    "@gnosis.pm/dx-contracts": "^2.0.0-RC17",
     "@gnosis.pm/mock-contract": "^3.0.6",
     "@gnosis.pm/truffle-nice-tools": "^1.1.4",
-    "@gnosis.pm/util-contracts": "^1.2.0-RC5-davidPR14",
+    "@gnosis.pm/util-contracts": "^2.0.0-RC5",
     "coveralls": "^3.0.2",
     "dotenv": "^6.2.0",
     "ethereumjs-abi": "^0.6.5",
@@ -25,9 +25,13 @@
   "scripts": {
     "test": "npx truffle test",
     "coverage": "./node_modules/.bin/solidity-coverage",
+    "compile": "npx truffle compile",
+    "migrate": "npx truffle migrate",
+    "networks": "npx truffle networks",
     "networks-extract": "npx truffle networks --clean && npx tnt extractNetworks",
     "networks-inject": "npx tnt injectNetworks",
-    "networks-reset": "truffle networks --clean  && npm run networks-inject"
+    "networks-reset": "truffle networks --clean  && npm run networks-inject",
+    "restore": "rm -rf build && npm run compile && npm run networks-reset"
   },
   "repository": {
     "type": "git",
