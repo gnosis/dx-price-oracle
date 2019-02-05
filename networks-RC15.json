@@ -1,0 +1,18 @@
+{
+  "DutchXPriceOracle": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0xC537bCD4C5B4Fd9b6811Ce5a5f0997eF6a11e465",
+      "transactionHash": "0x1d2d7278f208d9ee980de3348eb8f0c353995c1df791bea0ebbbd0af5bf4dedf"
+    }
+  },
+  "Migrations": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x710c74d6Fd0Aa54676783118639175Cc7482cF90",
+      "transactionHash": "0xf42abe91870e8248f5c4eb31641bea338e4907baeb4ef3fc38ea5a99eef8b127"
+    }
+  }
+}

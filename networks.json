@@ -1,18 +1,30 @@
 {
   "DutchXPriceOracle": {
+    "1": {
+      "events": {},
+      "links": {},
+      "address": "0x1A47a03132Bab53F820863FfC98243302bBaA6a8",
+      "transactionHash": "0xa76103e720d7265383b36cbc7fc88376567a6df07161323177b430dcd44cffa5"
+    },
     "4": {
       "events": {},
       "links": {},
-      "address": "0xC537bCD4C5B4Fd9b6811Ce5a5f0997eF6a11e465",
-      "transactionHash": "0x1d2d7278f208d9ee980de3348eb8f0c353995c1df791bea0ebbbd0af5bf4dedf"
+      "address": "0x456A30956Fd2b2a50AF64086d85014Ff97689531",
+      "transactionHash": "0x8a09d480888d214d4c464d8ddaa0910be87995bf3ce2e92e263f50bc23e29ca3"
     }
   },
   "Migrations": {
+    "1": {
+      "events": {},
+      "links": {},
+      "address": "0x38191eCDCc7F016Ab9D5BB467A615dfE11361625",
+      "transactionHash": "0x7c32d3c1c3e7d6a91fcb242b1339806c67fe1702215ee73b485752ee613d5ae7"
+    },
     "4": {
       "events": {},
       "links": {},
-      "address": "0x710c74d6Fd0Aa54676783118639175Cc7482cF90",
-      "transactionHash": "0xf42abe91870e8248f5c4eb31641bea338e4907baeb4ef3fc38ea5a99eef8b127"
+      "address": "0xea31E04CE2655FB73F1Be9bF7D79B711f2dEd716",
+      "transactionHash": "0x0b1b08c19b3439d17436d652fe0f2eafdef896a4f9e7fe6ab862ff08f65488b3"
     }
   }
 }
