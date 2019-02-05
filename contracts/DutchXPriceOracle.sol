@@ -29,8 +29,7 @@ contract DutchXPriceOracle {
         view
         returns (uint num, uint den)
     {
-        //(num, den) = getPriceCustom(token, 0, true, 4.5 days, 9);
-        (num, den) = getPriceCustom(token, 0, true, 1.5 days, 3);
+        (num, den) = getPriceCustom(token, 0, true, 4.5 days, 9);
     }
 
     /// @dev More fine-grained price oracle for token `token.address()`
