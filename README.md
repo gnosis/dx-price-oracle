@@ -8,6 +8,37 @@ Currently, uses a mock-interface (in `./contracts/IDutchX.sol`) of the DutchX in
 
 But it uses the actual abi for the tests. This is imported in `./contracts/Imports.sol`.
 
+## Local development
+```bash
+# Install dependencies
+yarn install
+
+# Compile contracts and inject network info
+yarn restore
+
+# Print the network info for every contract
+yarn networks
+```
+
+## Migrate contracts
+For a local ganache:
+```bash
+# Run ganache
+npx ganache-cli
+
+# Migrate
+yarn migrate
+```
+
+For other networks:
+```bash
+# Rinkeby
+PK=<private_key> yarn migrate --network rinkeby
+
+# Mainnet
+PK=<private_key> yarn migrate --network mainnet
+```
+
 ## Tests
 
 Tests use a [mock contract](https://github.com/gnosis/mock-contract) to imitate the behavior of the DutchX. We generate 50 auctions with random prices and clearing times, and then test each contract fn on that model.
