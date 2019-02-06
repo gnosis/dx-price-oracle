@@ -1,5 +1,11 @@
 [![Build Status](https://travis-ci.com/gnosis/dx-price-oracle.svg?branch=develop)](https://travis-ci.com/gnosis/dx-price-oracle)
 
+<p align="center">
+  <a href="./docs/audit_report/Solidified_Audit_Report.pdf">
+  <img width="100px" src="./docs/audit_report/Solidified_Badge.png" />
+  </a>
+</p>
+
 # DutchX Price Oracle
 
 Contract to get reliable price oracle from DutchX protocol.
