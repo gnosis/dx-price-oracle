@@ -37,7 +37,7 @@ contract DutchXPriceOracle {
     /// @param time 0 for current price, a Unix timestamp for a price at any point in time
     /// @param requireWhitelisted Require the token be whitelisted on the DutchX? (Unwhitelisted addresses might not conform to the ERC-20 standard and/or might be malicious)
     /// @param maximumTimePeriod maximum time period between clearing time of last auction and `time`
-    /// @param numberOfAuctions how many auctions to consider
+    /// @param numberOfAuctions how many auctions to consider. Contract is safe only for odd numbers.
     /// @return The numerator of the price of the token
     /// @return The denominator of the price of the token
     function getPriceCustom(
@@ -84,7 +84,7 @@ contract DutchXPriceOracle {
     /// @notice gets prices, starting 
     /// @dev search starts at auctionIndex - 1. The reason for this is we expect the most common use case to be the latest auction index and for that the clearingTime is not available yet. So we need to start at the one before
     /// @param token address of ERC-20 token in question
-    /// @param numberOfAuctions how many auctions to consider
+    /// @param numberOfAuctions how many auctions to consider. Contract is safe only for add numbers
     /// @param auctionIndex search will begin at auctionIndex - 1
     /// @return The numerator of the price of the token
     /// @return The denominator of the price of the token
@@ -169,6 +169,7 @@ contract DutchXPriceOracle {
         // If instead of a/b we do (a/b + c/d)/2 = (ad+bc)/(2bd), we see the order
         // would become 10^60. That would increase chance of overflow in contracts 
         // that depend on this price oracle
+        // This also means the Price Oracle is safe only for odd values of numberOfAuctions!
 
         return (nums[index], dens[index]);
     }
