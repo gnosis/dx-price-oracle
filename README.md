@@ -30,7 +30,11 @@ This function will return a fraction (`num`/`den`), using the following logic:
 * `num/den`: **Median of the last 9 auctions**. In other words, if we order the 
   last 9 auctions by price, we take the 5th value.
 
-![](./docs/img/getPrice.png)
+In the following example, we get the price for RDN (`0x255Aa6DF07540Cb5d3d297f0D0D4D84cb52bc8e6`):
+
+<p align="center">
+  <img width="460" src="./docs/img/getPrice.png">
+</p>
 
 It provides also a parametrized function, to allow to change the behaviour of the
 price oracle ([See implementation](https://github.com/gnosis/dx-price-oracle/blob/master/contracts/DutchXPriceOracle.sol#L43)):
@@ -53,7 +57,10 @@ The next image shows an example, on how to get the price using:
 * Return only prices for whitelisted tokens: `true`
 * Return only a price if the auctions runned within the last **1.5 days**: `1296000`
 * Use **3 auctions** to get the median: `3`
-![](./docs/img/getPriceCustom.png)
+
+<p align="center">
+  <img width="460" src="./docs/img/getPriceCustom.png">
+</p>
 
 # Deployed price oracle
 Rinkeby:
