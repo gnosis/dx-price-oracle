@@ -8,11 +8,59 @@
 
 # DutchX Price Oracle
 
-Contract to get reliable price oracle from DutchX protocol.
+Contract to get an onchain reliable price oracle from DutchX protocol.
 
-Currently, uses a mock-interface (in `./contracts/IDutchX.sol`) of the DutchX in order for Solidity to be happy.
+The oracle exposes a simple function that will return the price for any ERC20 
+traded on the DutchX ([See implementation](https://github.com/gnosis/dx-price-oracle/blob/master/contracts/DutchXPriceOracle.sol#L27)).
+```js
+function getPrice(address token)
+        public
+        view
+        returns (uint num, uint den)
+```
 
-But it uses the actual abi for the tests. This is imported in `./contracts/Imports.sol`.
+
+This function will return a fraction (`num`/`den`), using the following logic:
+* `0/0`: 
+  * If the token it's not listed in DutchX
+  * If the token it's not whitelisted in the DutchX
+  * If there's not enough liquidity. Basically, it requires that there should be 
+    auctions running continuosly in the DutchX. More formally, it will return 
+    `0/0` if there is less than **9 auctions** in the last **4.5 days**.
+* `num/den`: **Median of the last 9 auctions**. In other words, if we order the 
+  last 9 auctions by price, we take the 5th value.
+
+![](./docs/img/getPrice.png)
+
+It provides also a parametrized function, to allow to change the behaviour of the
+price oracle ([See implementation](https://github.com/gnosis/dx-price-oracle/blob/master/contracts/DutchXPriceOracle.sol#L43)):
+```js
+function getPriceCustom(
+        address token,
+        uint time,
+        bool requireWhitelisted,
+        uint maximumTimePeriod,
+        uint numberOfAuctions
+    )
+        public
+        view
+        returns (uint num, uint den)
+```
+
+The next image shows an example, on how to get the price using:
+* RDN Token: `0x255Aa6DF07540Cb5d3d297f0D0D4D84cb52bc8e6`
+* Check the current price: `0`
+* Return only prices for whitelisted tokens: `true`
+* Return only a price if the auctions runned within the last **1.5 days**: `1296000`
+* Use **3 auctions** to get the median: `3`
+![](./docs/img/getPriceCustom.png)
+
+# Deployed price oracle
+Rinkeby:
+* **DutchXPriceOracle**: [https://rinkeby.etherscan.io/address/0x98650dc1D7a76Cc0c3B8AbCA2cA31DCd04DF62A3 ](https://rinkeby.etherscan.io/address/0x98650dc1D7a76Cc0c3B8AbCA2cA31DCd04DF62A3)
+
+Mainnet: 
+* **DutchXPriceOracle**: [https://etherscan.io/address/0x764c0020706575ebbdEa3C425EBF894C4F855B07](https://etherscan.io/address/0x764c0020706575ebbdEa3C425EBF894C4F855B07)
 
 ## Local development
 ```bash
@@ -61,6 +109,7 @@ npm publish --access=public
 ```bash
 # Flatten contract
 npx truffle-flattener contracts/DutchXPriceOracle.sol > build/DutchXPriceOracle-EtherScan.sol
+npx truffle-flattener contracts/WhitelistPriceOracle.sol > build/WhitelistPriceOracle-EtherScan.sol
 ```
 
 Validate the contract:
