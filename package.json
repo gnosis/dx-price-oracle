@@ -12,10 +12,10 @@
   },
   "devDependencies": {
     "@digix/tempo": "^0.2.0",
-    "@gnosis.pm/dx-contracts": "^2.0.0-RC17",
+    "@gnosis.pm/dx-contracts": "^2.0.0",
     "@gnosis.pm/mock-contract": "^3.0.6",
     "@gnosis.pm/truffle-nice-tools": "^1.1.4",
-    "@gnosis.pm/util-contracts": "^2.0.0-RC5",
+    "@gnosis.pm/util-contracts": "^2.0.0",
     "coveralls": "^3.0.2",
     "dotenv": "^6.2.0",
     "ethereumjs-abi": "^0.6.5",
