@@ -8,7 +8,7 @@
 
 # DutchX Price Oracle
 
-Contract to get an onchain reliable price oracle from DutchX protocol.
+Contract to get an onchain reliable price from DutchX protocol.
 
 The oracle exposes a simple function that will return the price for any ERC20 
 traded on the DutchX ([See implementation](https://github.com/gnosis/dx-price-oracle/blob/master/contracts/DutchXPriceOracle.sol#L27)).
@@ -52,11 +52,11 @@ function getPriceCustom(
 ```
 
 The next image shows an example, on how to get the price using:
-* RDN Token: `0x255Aa6DF07540Cb5d3d297f0D0D4D84cb52bc8e6`
-* Check the current price: `0`
-* Return only prices for whitelisted tokens: `true`
-* Return only a price if the auctions runned within the last **1.5 days**: `1296000`
-* Use **3 auctions** to get the median: `3`
+* RDN Token: `token = 0x255Aa6DF07540Cb5d3d297f0D0D4D84cb52bc8e6`
+* Check the current price: `time = 0`
+* Return only prices for whitelisted tokens: `requireWhitelisted = true`
+* Return only a price if the auctions runned within the last **1.5 days**: `maximumTimePeriod = 1296000`
+* Use **3 auctions** to get the median: `numberOfAuctions = 3`
 
 <p align="center">
   <img width="460" src="./docs/img/getPriceCustom.png">
