@@ -47,6 +47,8 @@ function getPriceCustom(
         returns (uint num, uint den)
 ```
 
+Note: the contract is only safe for odd numbers of auctions. See [here](https://github.com/gnosis/dx-price-oracle/blob/master/contracts/DutchXPriceOracle.sol#L165).
+
 The next image shows an example, on how to get the price using:
 * RDN Token: `0x255Aa6DF07540Cb5d3d297f0D0D4D84cb52bc8e6`
 * Check the current price: `0`
