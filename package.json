@@ -16,9 +16,9 @@
     "@gnosis.pm/mock-contract": "^3.0.6",
     "@gnosis.pm/truffle-nice-tools": "^1.1.4",
     "@gnosis.pm/util-contracts": "^2.0.0",
-    "coveralls": "^3.0.2",
-    "dotenv": "^6.2.0",
-    "ethereumjs-abi": "^0.6.5",
+    "coveralls": "^3.0.3",
+    "dotenv": "^7.0.0",
+    "ethereumjs-abi": "^0.6.7",
     "minimist": "^1.2.0",
     "solidity-coverage": "^0.5.11"
   },

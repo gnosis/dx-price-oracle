@@ -11,6 +11,12 @@
       "links": {},
       "address": "0x98650dc1D7a76Cc0c3B8AbCA2cA31DCd04DF62A3",
       "transactionHash": "0x6bf8f5060d274232751efb41e90688d9a66f1acf001408183af74e86f1790654"
+    },
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0x64e0EB0845158d22827d3Bf3aC8727260B9E9b45",
+      "transactionHash": "0x4c4dd90fb3ac3691daff0b3dc9dd69737d435de84691cb7b6481dffe24a40e37"
     }
   },
   "Migrations": {
@@ -25,6 +31,12 @@
       "links": {},
       "address": "0x2C352Cb3298A9DD4c2f919288c7e71C8d47e84a5",
       "transactionHash": "0x9b01d88db8324636667c41b9004e74413ebad110c0e825ecbc73942e5be45f76"
+    },
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0xA439F0C6ea44c83819ceFD0F945A015a6cE894f7",
+      "transactionHash": "0x804e9fd72da828def7ca0d885f9743acdea5a1e2687f85140be081fc261feed7"
     }
   },
   "WhitelistPriceOracle": {
@@ -39,6 +51,12 @@
       "links": {},
       "address": "0x281e1bfaE838bc3f799e3bbFBC9f10dDdc53Ad41",
       "transactionHash": "0xa2c44c4251cbb66272bf53f53f054cfa14a36ba005ac226ae10da9abd7cc652b"
+    },
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0xB4D50cb8077Ed49065b91993Ef5a565517f09860",
+      "transactionHash": "0xaa8c16220aa4ec12d7232c8097eed1f86f5ec5422aba0ff3302fd17caff705ba"
     }
   }
 }
